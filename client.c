@@ -13,8 +13,8 @@
 
 #include "functions.h"
 
-int main(void){
-
+int main(void)
+{
 	// create socket
 	int clientSocket = 
 		create_TCP_socket();

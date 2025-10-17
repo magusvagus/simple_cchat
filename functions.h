@@ -38,7 +38,8 @@ void *threadedSocket(void *serverSocket);
 void *run_thread(void *serverSocket);
 
 
-void *run_thread(void *intClientSocket)
+void
+*run_thread(void *intClientSocket)
 {
 	// set timer for message timer
 	time_t rawtime = 0; // raw time integer
@@ -109,7 +110,9 @@ void *run_thread(void *intClientSocket)
 }
 
 
-struct AcceptSocket *acceptSocket(int serverSocket){
+struct AcceptSocket
+*acceptSocket(int serverSocket)
+{
 	// accept socket (returns client FD/socket)
 	struct sockaddr_in clientAddress;
 	int clientAddressSize = sizeof(struct sockaddr_in);
@@ -140,7 +143,9 @@ struct AcceptSocket *acceptSocket(int serverSocket){
 }
 
 
-struct sockaddr_in *create_IPV4_address(int port, char *ip){
+struct sockaddr_in 
+*create_IPV4_address(int port, char *ip)
+{
 	// define address
 	// after the function is initialised the data from here
 	// can be overwritten, so we have to define it using malloc
@@ -156,7 +161,9 @@ struct sockaddr_in *create_IPV4_address(int port, char *ip){
 }
 
 
-int create_TCP_socket(){
+int 
+create_TCP_socket()
+{
 	// define socket, familly, socket type, undrlying protocol
 	int clientSocket;
 	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
