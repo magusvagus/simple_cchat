@@ -9,3 +9,4 @@ Planned features:
 	- LibreSSL end to end encoding
 	- Ncurses TUI
 	- Private messages via seperated buffer
+	- mutexes
