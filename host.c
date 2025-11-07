@@ -16,8 +16,6 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-#include <semaphore.h>
-
 #include "functions.h"
 
 #define QUEUE 10
