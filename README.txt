@@ -10,3 +10,7 @@ Planned features:
 	- Ncurses TUI
 	- Private messages via seperated buffer
 	- mutexes
+	- arena
+
+Currently working on:
+	- Arena
