@@ -39,14 +39,26 @@ int main(void)
 
 
 	// asks for a file discriptor, address , the length of address
+	// since sockaddr is a generic struct for several addr types
+	// and lacks struct members like sin_port and sin_family.
+	// this means we need to use the ipv4 struct (sockaddr_in) and cast it to
+	// sockaddr, it tells the compiler to treat the memmory address of sockaddr_in
+	// struct as if it points to sockaddr.
 	int err = connect(SOCK_FileDiscriptor, (struct sockaddr *)&address, sizeof(address));
 	if(err == -1){
 		printf("Error connecting to file discriptor\n");
 	}else{
 		printf("Connected\n");
 	}
+	// the cast gives the function access to the (sa_family) member of the struct
+	// wich defines its family type (AF_INET) in this case.
+	// the function accepts a generic (sockaddr *) but, interprets it based on the
+	// (sa_family) struct member allowing it to work with different address types.
 
-
+	// The (sa_family) member identifies the 'address family' for local sockets.
+	// it tells the system how to interpret the rest of the address structure.
+	// When a generic (struct sockaddr *) is passed to the function, the system
+	// reads (sa_family) to determine the correct specific structure type (lise sockaddr_in)
 
 
 	return 0;
