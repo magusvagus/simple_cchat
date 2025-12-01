@@ -1,15 +1,17 @@
 #include "sockets.h"
 
-int SOCK_CreateTCP_IPV4( char* ip, int port) 
-{
-	int SOCK_FileDisctiptor = socket(AF_INET, SOCK_STREAM, 0);
-	if(SOCK_FileDisctiptor == -1) {
-		printf("Error creating file discriptor.\n");
-	}
-	struct sockaddr_in address;
-	address.sin_family = AF_INET;
-	address.sin_port = htons(port);
-	inet_pton(AF_INET, ip, &address.sin_addr.s_addr);
 
-	return SOCK_FileDisctiptor;
+// since function created on the stack wipe everything
+// after the funciton returned, its importatnt to put
+// the socket on the heap.
+struct sockaddr_in* SOCK_CreateAdressIPV4( char* ip, int port) 
+{
+	struct sockaddr_in *address;
+	address = calloc(1, sizeof(struct sockaddr_in));
+
+	address->sin_family = AF_INET;
+	address->sin_port = htons(port);
+	inet_pton(AF_INET, ip, &address->sin_addr.s_addr);
+
+	return address;
 }

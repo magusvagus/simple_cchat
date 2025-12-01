@@ -5,9 +5,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h> 
 #include <stdio.h>
+#include <stdlib.h>
 
 
-int SOCK_CreateTCP_IPV4( char* ip, int port);
+struct sockaddr_in* SOCK_CreateAdressIPV4( char* ip, int port);
 
 #endif
 
