@@ -4,6 +4,7 @@
 #include <arpa/inet.h> // inet_pton
 
 
+
 int main(void)
 {
 	/*
@@ -59,6 +60,14 @@ int main(void)
 	// it tells the system how to interpret the rest of the address structure.
 	// When a generic (struct sockaddr *) is passed to the function, the system
 	// reads (sa_family) to determine the correct specific structure type (lise sockaddr_in)
+
+	const char message[] = "GET \\ HTTP/1.1\r\nHost: gentoo.org\r\n\r\n";
+	char buffer[1024];
+
+	send(SOCK_FileDiscriptor, message, sizeof(message), 0);
+	recv(SOCK_FileDiscriptor, buffer, sizeof(buffer), 0);
+
+	printf("%s",buffer);
 
 
 	return 0;
