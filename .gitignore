@@ -1,2 +1,5 @@
 test
+server.o
+client.o
+sockets.o
 
