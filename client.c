@@ -4,7 +4,6 @@
 #include <arpa/inet.h> // inet_pton
 
 
-
 int main(void)
 {
 	/*
@@ -28,7 +27,7 @@ int main(void)
 	}
 
 	// test ip
-	char* ip = "146.75.109.91";
+	char* ip = "172.0.0.1";
 	struct sockaddr_in address;
 	address.sin_family = AF_INET;
 	// h to network short (big endian to liitle endinan)
@@ -61,7 +60,7 @@ int main(void)
 	// When a generic (struct sockaddr *) is passed to the function, the system
 	// reads (sa_family) to determine the correct specific structure type (lise sockaddr_in)
 
-	const char message[] = "GET \\ HTTP/1.1\r\nHost: gentoo.org\r\n\r\n";
+	const char message[] = "Testing message";
 	char buffer[1024];
 
 	send(SOCK_FileDiscriptor, message, sizeof(message), 0);

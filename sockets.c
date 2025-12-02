@@ -4,7 +4,7 @@
 // since function created on the stack wipe everything
 // after the funciton returned, its importatnt to put
 // the socket on the heap.
-struct sockaddr_in* SOCK_CreateAdressIPV4( char* ip, int port) 
+struct sockaddr_in* SOCK_CreateAddressIPV4( char* ip, int port) 
 {
 	struct sockaddr_in *address;
 	address = calloc(1, sizeof(struct sockaddr_in));

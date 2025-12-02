@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 
-struct sockaddr_in* SOCK_CreateAdressIPV4( char* ip, int port);
+struct sockaddr_in* SOCK_CreateAddressIPV4( char* ip, int port);
 
 #endif
 
