@@ -2,7 +2,7 @@
 
 int main(void)
 {
-	char ip[] = "127.0.0.1";
+	char ip[] = "0.0.0.0";
 	char buffer[1024];
 	int backlog = 50;
 	int port = 2000;
@@ -39,10 +39,8 @@ int main(void)
 		printf("Error accepting client address.\n");
 	}
 
-	while(1){ 
-		recv(CLIENT_FileDiscriptor, buffer, sizeof(buffer), 0);
-		printf("%s", buffer);
-	}	
+	recv(CLIENT_FileDiscriptor, buffer, sizeof(buffer), 0);
+	printf("%s", buffer);
 
 
 	free(address);
