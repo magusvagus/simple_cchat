@@ -21,17 +21,17 @@ int main(void)
 	- returns INT -1 if error occurs
 	*/ 		
 
-	int SOCK_FileDiscriptor =  socket(AF_INET,SOCK_STREAM,0);
+	int SOCK_FileDiscriptor = socket(AF_INET,SOCK_STREAM,0);
 	if (SOCK_FileDiscriptor == -1){
 		printf("Error creating file discriptor.\n");
 	}
 
 	// test ip
-	char* ip = "172.0.0.1";
+	char* ip = "127.0.0.1";
 	struct sockaddr_in address;
 	address.sin_family = AF_INET;
 	// h to network short (big endian to liitle endinan)
-	address.sin_port = htons(80); 
+	address.sin_port = htons(2000); 
 	// since the ip variable is a string, we need to convert each
 	// of the numbers to a unsigned integer
 	// (inet presentation to network)

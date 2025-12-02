@@ -2,7 +2,7 @@
 
 int main(void)
 {
-	char ip[] = "172.0.0.1";
+	char ip[] = "127.0.0.1";
 	char buffer[1024];
 	int backlog = 50;
 	int port = 2000;
@@ -16,7 +16,7 @@ int main(void)
 	//called memory must be freed
 	struct sockaddr_in *address = SOCK_CreateAddressIPV4(ip, port);
 
-	int err_bind = bind(SERV_FileDisctiptor, address, sizeof(*address));
+	int err_bind = bind(SERV_FileDisctiptor, (struct sockaddr *)address, sizeof(*address));
 	if(err_bind == -1) {
 		printf("Error binding socket to port: %d.\n",port);
 	}
@@ -39,8 +39,10 @@ int main(void)
 		printf("Error accepting client address.\n");
 	}
 
-	recv(CLIENT_FileDiscriptor, buffer, sizeof(buffer), 0);
-	printf("%s", buffer);
+	while(1){ 
+		recv(CLIENT_FileDiscriptor, buffer, sizeof(buffer), 0);
+		printf("%s", buffer);
+	}	
 
 
 	free(address);
