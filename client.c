@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h> // inet_pton
 #include <string.h>
+#include <unistd.h>
 
 
 int main(void)
@@ -64,8 +65,14 @@ int main(void)
 	char message[1024];
 	char buffer[1024];
 
-	while(strcmp(message, "/quit\n")) {
+	while(1) {
 		fgets(message, sizeof(message), stdin);
+
+		if(!strcmp(message, "/quit\n")) {
+			close(SOCK_FileDiscriptor);
+			break;
+		}
+
 		send(SOCK_FileDiscriptor, message, sizeof(message), 0);
 	}
 

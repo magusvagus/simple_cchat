@@ -1,4 +1,5 @@
 #include "sockets.h"
+#include <string.h>
 
 int main(void)
 {
@@ -38,13 +39,15 @@ int main(void)
 		printf("Error accepting client address.\n");
 	}
 
-	int CLIEN_Quit = 1;
-	while(CLIEN_Quit != 0) {
-		// recv returns 0 when client quits connection
-		CLIEN_Quit = 
-			recv(CLIENT_FileDiscriptor, buffer, sizeof(buffer), 0);
-		printf("%s\n", buffer);
-	}
+	while(1) {
+		int CLIEN_Quit = recv(CLIENT_FileDiscriptor, buffer, sizeof(buffer) - 1, 0);
+		
+		if (CLIEN_Quit == 0) {
+			printf("Client closed connection.\n");
+			break;
+		}
+		printf("%s", buffer);
+	}   
 
 	free(SERV_Address);
 	SERV_Address = NULL;
