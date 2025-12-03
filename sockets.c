@@ -15,3 +15,27 @@ struct sockaddr_in* SOCK_CreateAddressIPV4( char* ip, int port)
 
 	return address;
 }
+
+
+struct CLIENT_Socket* SOCK_AcceptClient(int SERV_FileDisctiptor) 
+{
+	// accept returns the FD of the connecting client
+	// and returns client's ip
+	struct sockaddr_in CLIENT_Address;
+	int CLIENT_AddressSize = sizeof(CLIENT_Address);
+
+	int CLIENT_FileDiscriptor = 
+		accept(SERV_FileDisctiptor, 
+				(struct sockaddr *)&CLIENT_Address, &CLIENT_AddressSize);
+
+	if(CLIENT_FileDiscriptor < 0) {
+		printf("Error accepting client address.\n");
+	}
+
+	struct CLIENT_Socket* acceptedSocket = calloc(1, sizeof(struct CLIENT_Socket));
+	acceptedSocket->CLIENT_FileDiscriptor = CLIENT_FileDiscriptor;
+	acceptedSocket->address = CLIENT_Address;
+	acceptedSocket->CLIENT_AddressSize = CLIENT_AddressSize;
+	
+	return acceptedSocket;
+}

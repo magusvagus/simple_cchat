@@ -29,20 +29,11 @@ int main(void)
 		printf("Error listening on port: %d.\n" ,port);
 	}
 
-	// accept returns the FD of the connecting client
-	// and returns client's ip
-	struct sockaddr_in CLIENT_Address;
-	int CLIENT_AddressSize = sizeof(CLIENT_Address);
-
-	int CLIENT_FileDiscriptor = 
-		accept(SERV_FileDisctiptor, 
-				(struct sockaddr *)&CLIENT_Address, &CLIENT_AddressSize);
-	if(CLIENT_FileDiscriptor < 0) {
-		printf("Error accepting client address.\n");
-	}
+	struct CLIENT_Socket* acceptedSocket = SOCK_AcceptClient(SERV_FileDisctiptor);
 
 	while(1) {
-		int CLIEN_Quit = recv(CLIENT_FileDiscriptor, buffer, sizeof(buffer) - 1, 0);
+		int CLIEN_Quit = recv(acceptedSocket->CLIENT_FileDiscriptor, 
+				buffer, sizeof(buffer) - 1, 0);
 		
 		if (CLIEN_Quit == 0) {
 			printf("Client closed connection.\n");
@@ -52,7 +43,7 @@ int main(void)
 	}   
 
 	// close all sockets
-	close(CLIENT_FileDiscriptor);
+	close(acceptedSocket->CLIENT_FileDiscriptor);
 	shutdown(SERV_FileDisctiptor, SHUT_RDWR);
 
 	free(SERV_Address);
