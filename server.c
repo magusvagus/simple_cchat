@@ -14,15 +14,15 @@ int main(void)
 	}
 
 	//called memory must be freed
-	struct sockaddr_in *address = SOCK_CreateAddressIPV4(ip, port);
+	struct sockaddr_in *SERV_Address = SOCK_CreateAddressIPV4(ip, port);
 
-	int err_bind = bind(SERV_FileDisctiptor, (struct sockaddr *)address, sizeof(*address));
-	if(err_bind == -1) {
+	int ERR_Bind = bind(SERV_FileDisctiptor, (struct sockaddr *)SERV_Address, sizeof(*SERV_Address));
+	if(ERR_Bind == -1) {
 		printf("Error binding socket to port: %d.\n",port);
 	}
 
-	int err_listen = listen(SERV_FileDisctiptor, backlog);
-	if(err_listen == -1) {
+	int ERR_Listen = listen(SERV_FileDisctiptor, backlog);
+	if(ERR_Listen == -1) {
 		printf("Error listening on port: %d.\n" ,port);
 	}
 
@@ -34,17 +34,20 @@ int main(void)
 	int CLIENT_FileDiscriptor = 
 		accept(SERV_FileDisctiptor, 
 				(struct sockaddr *)&CLIENT_Address, &CLIENT_AddressSize);
-
 	if(CLIENT_FileDiscriptor < 0) {
 		printf("Error accepting client address.\n");
 	}
 
-	recv(CLIENT_FileDiscriptor, buffer, sizeof(buffer), 0);
-	printf("%s", buffer);
+	int CLIEN_Quit = 1;
+	while(CLIEN_Quit != 0) {
+		// recv returns 0 when client quits connection
+		CLIEN_Quit = 
+			recv(CLIENT_FileDiscriptor, buffer, sizeof(buffer), 0);
+		printf("%s\n", buffer);
+	}
 
-
-	free(address);
-	address = NULL;
+	free(SERV_Address);
+	SERV_Address = NULL;
 
 	return 0;
 }

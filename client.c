@@ -2,6 +2,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h> // inet_pton
+#include <string.h>
 
 
 int main(void)
@@ -60,14 +61,16 @@ int main(void)
 	// When a generic (struct sockaddr *) is passed to the function, the system
 	// reads (sa_family) to determine the correct specific structure type (lise sockaddr_in)
 
-	const char message[] = "Testing message";
+	char message[1024];
 	char buffer[1024];
 
-	send(SOCK_FileDiscriptor, message, sizeof(message), 0);
-	recv(SOCK_FileDiscriptor, buffer, sizeof(buffer), 0);
+	while(strcmp(message, "/quit\n")) {
+		fgets(message, sizeof(message), stdin);
+		send(SOCK_FileDiscriptor, message, sizeof(message), 0);
+	}
 
-	printf("%s",buffer);
-
+	//recv(SOCK_FileDiscriptor, buffer, sizeof(buffer), 0);
+	//printf("%s",buffer);
 
 	return 0;
 }
