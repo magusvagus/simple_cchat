@@ -1,5 +1,7 @@
 #include "sockets.h"
 #include <string.h>
+#include <pthread.h>
+#include <unistd.h>
 
 int main(void)
 {
@@ -48,6 +50,10 @@ int main(void)
 		}
 		printf("%s", buffer);
 	}   
+
+	// close all sockets
+	close(CLIENT_FileDiscriptor);
+	shutdown(SERV_FileDisctiptor, SHUT_RDWR);
 
 	free(SERV_Address);
 	SERV_Address = NULL;

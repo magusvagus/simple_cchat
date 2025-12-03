@@ -73,8 +73,14 @@ int main(void)
 			break;
 		}
 
-		send(SOCK_FileDiscriptor, message, sizeof(message), 0);
+		int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
+		if(ERR_send == -1) {
+			printf("Error, could not send message.\n");
+		}
+
 	}
+
+	close(SOCK_FileDiscriptor);
 
 	//recv(SOCK_FileDiscriptor, buffer, sizeof(buffer), 0);
 	//printf("%s",buffer);
