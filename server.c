@@ -11,31 +11,31 @@ int main(void)
 	int port = 2000;
 
 	// create socket FD
-	int SERV_FileDisctiptor = socket(AF_INET, SOCK_STREAM, 0);
-	if(SERV_FileDisctiptor == -1) {
+	int serv_file_disctiptor = socket(AF_INET, SOCK_STREAM, 0);
+	if(serv_file_disctiptor == -1) {
 		printf("Error creating file discriptor.\n");
 	}
 
 	//called memory must be freed
-	struct sockaddr_in *SERV_Address = SOCK_CreateAddressIPV4(ip, port);
+	struct sockaddr_in *serv_address = sock_create_IPV4_addr(ip, port);
 
-	int ERR_Bind = bind(SERV_FileDisctiptor, (struct sockaddr *)SERV_Address, sizeof(*SERV_Address));
-	if(ERR_Bind == -1) {
+	int err_bind = bind(serv_file_disctiptor, (struct sockaddr *)serv_address, sizeof(*serv_address));
+	if(err_bind == -1) {
 		printf("Error binding socket to port: %d.\n",port);
 	}
 
-	int ERR_Listen = listen(SERV_FileDisctiptor, backlog);
-	if(ERR_Listen == -1) {
+	int err_listen = listen(serv_file_disctiptor, backlog);
+	if(err_listen == -1) {
 		printf("Error listening on port: %d.\n" ,port);
 	}
 
-	struct CLIENT_Socket* acceptedSocket = SOCK_AcceptClient(SERV_FileDisctiptor);
+	struct AcceptedSocket* acceptedSocket = sock_accept_client(serv_file_disctiptor);
 
 	while(1) {
-		int CLIEN_Quit = recv(acceptedSocket->CLIENT_FileDiscriptor, 
+		int client_quit = recv(acceptedSocket->fileDiscriptor, 
 				buffer, sizeof(buffer) - 1, 0);
 		
-		if (CLIEN_Quit == 0) {
+		if (client_quit == 0) {
 			printf("Client closed connection.\n");
 			break;
 		}
@@ -43,11 +43,11 @@ int main(void)
 	}   
 
 	// close all sockets
-	close(acceptedSocket->CLIENT_FileDiscriptor);
-	shutdown(SERV_FileDisctiptor, SHUT_RDWR);
+	close(acceptedSocket->fileDiscriptor);
+	shutdown(serv_file_disctiptor, SHUT_RDWR);
 
-	free(SERV_Address);
-	SERV_Address = NULL;
+	free(serv_address);
+	serv_address = NULL;
 
 	return 0;
 }

@@ -4,7 +4,7 @@
 // since function created on the stack wipe everything
 // after the funciton returned, its importatnt to put
 // the socket on the heap.
-struct sockaddr_in* SOCK_CreateAddressIPV4( char* ip, int port) 
+struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port) 
 {
 	struct sockaddr_in *address;
 	address = calloc(1, sizeof(struct sockaddr_in));
@@ -17,25 +17,26 @@ struct sockaddr_in* SOCK_CreateAddressIPV4( char* ip, int port)
 }
 
 
-struct CLIENT_Socket* SOCK_AcceptClient(int SERV_FileDisctiptor) 
+struct AcceptedSocket* sock_accept_client(int serv_file_discriptor) 
 {
 	// accept returns the FD of the connecting client
 	// and returns client's ip
-	struct sockaddr_in CLIENT_Address;
-	int CLIENT_AddressSize = sizeof(CLIENT_Address);
+	struct sockaddr_in client_address;
+	int client_address_size = sizeof(client_address);
 
-	int CLIENT_FileDiscriptor = 
-		accept(SERV_FileDisctiptor, 
-				(struct sockaddr *)&CLIENT_Address, &CLIENT_AddressSize);
+	int client_file_discriptor = 
+		accept(serv_file_discriptor, 
+				(struct sockaddr *)&client_address, &client_address_size);
 
-	if(CLIENT_FileDiscriptor < 0) {
+	if(client_file_discriptor < 0) {
 		printf("Error accepting client address.\n");
 	}
 
-	struct CLIENT_Socket* acceptedSocket = calloc(1, sizeof(struct CLIENT_Socket));
-	acceptedSocket->CLIENT_FileDiscriptor = CLIENT_FileDiscriptor;
-	acceptedSocket->address = CLIENT_Address;
-	acceptedSocket->CLIENT_AddressSize = CLIENT_AddressSize;
+	struct AcceptedSocket *s = 
+		calloc(1, sizeof(struct AcceptedSocket));
+	s->fileDiscriptor = client_file_discriptor;
+	s->address = client_address;
+	s->addressSize = client_address_size;
 	
-	return acceptedSocket;
+	return s;
 }

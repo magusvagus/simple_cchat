@@ -7,14 +7,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct CLIENT_Socket {
-	int CLIENT_FileDiscriptor;
-	int CLIENT_AddressSize;
+struct AcceptedSocket {
+	int fileDiscriptor;
+	int addressSize;
 	struct sockaddr_in address;
 };
 
-struct sockaddr_in* SOCK_CreateAddressIPV4( char* ip, int port);
-struct CLIENT_Socket* SOCK_AcceptClient(int SERV_FileDisctiptor);
+struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port);
+struct AcceptedSocket* sock_accept_client(int SERV_FileDisctiptor);
 
 #endif
 
