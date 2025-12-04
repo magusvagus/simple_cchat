@@ -17,7 +17,7 @@ int main(void)
 	}
 
 	//called memory must be freed
-	struct sockaddr_in *serv_address = sock_create_IPV4_addr(ip, port);
+	struct sockaddr_in *serv_address = sock_create_IPV4_addr(NULL, port);
 
 	int err_bind = bind(serv_file_disctiptor, (struct sockaddr *)serv_address, sizeof(*serv_address));
 	if(err_bind == -1) {

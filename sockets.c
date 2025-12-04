@@ -11,7 +11,12 @@ struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port)
 
 	address->sin_family = AF_INET;
 	address->sin_port = htons(port);
-	inet_pton(AF_INET, ip, &address->sin_addr.s_addr);
+	if( ip != NULL) {
+		inet_pton(AF_INET, ip, &address->sin_addr.s_addr);
+	}
+	else {
+		address->sin_addr.s_addr = INADDR_ANY;
+	}
 
 	return address;
 }
