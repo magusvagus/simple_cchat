@@ -15,6 +15,8 @@ struct AcceptedSocket {
 
 struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port);
 struct AcceptedSocket* sock_accept_client(int SERV_FileDisctiptor);
+void sock_listen_print(struct AcceptedSocket *acceptedSocket);
+void* wrapper_listen_print(void* arg);
 
 #endif
 

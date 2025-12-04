@@ -1,5 +1,5 @@
 #include "sockets.h"
-
+#include <unistd.h>
 
 // since function created on the stack wipe everything
 // after the funciton returned, its importatnt to put
@@ -44,4 +44,31 @@ struct AcceptedSocket* sock_accept_client(int serv_file_discriptor)
 	s->addressSize = client_address_size;
 	
 	return s;
+}
+
+void sock_listen_print(struct AcceptedSocket *acceptedSocket)
+{
+	char buffer[1024];
+
+
+	while(1) {
+		int client_quit = recv(acceptedSocket->fileDiscriptor, 
+				buffer, sizeof(buffer) - 1, 0);
+		
+		if (client_quit == 0) {
+			printf("Client closed connection.\n");
+			break;
+		}
+		printf("%s", buffer);
+	}   
+
+	close(acceptedSocket->fileDiscriptor);
+}
+
+void* wrapper_listen_print(void* arg)
+{
+	struct AcceptedSocket* AcceptedSocket = (struct AcceptedSocket*)arg;
+	sock_listen_print(AcceptedSocket);
+	return NULL;
+
 }
