@@ -30,6 +30,8 @@ int main(void)
 	}
 
 	while(1){
+		// this function locks the program until
+		// accept function confirms connection
 		struct AcceptedSocket* acceptedSocket = 
 			sock_accept_client(serv_file_discriptor);
 

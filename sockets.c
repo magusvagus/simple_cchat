@@ -1,5 +1,6 @@
 #include "sockets.h"
 #include <unistd.h>
+#include <string.h>
 
 // since function created on the stack wipe everything
 // after the funciton returned, its importatnt to put
@@ -32,8 +33,7 @@ struct AcceptedSocket* sock_accept_client(int serv_file_discriptor)
 	int client_file_discriptor = 
 		accept(serv_file_discriptor, 
 				(struct sockaddr *)&client_address, &client_address_size);
-
-	if(client_file_discriptor < 0) {
+	if(client_file_discriptor == -1) {
 		printf("Error accepting client address.\n");
 	}
 
@@ -49,19 +49,33 @@ struct AcceptedSocket* sock_accept_client(int serv_file_discriptor)
 void sock_listen_print(struct AcceptedSocket *acceptedSocket)
 {
 	char buffer[1024];
+	char nickname[17];
 
+	// ask for nickname
+	int client_quit = recv(acceptedSocket->fileDiscriptor, 
+			nickname, sizeof(nickname), 0);
 
+	// remove \n 
+	nickname[strlen(nickname) -1] = '\0';
+
+	printf("%s entered chat\n", nickname);
+
+	// print recieve loop
 	while(1) {
 		int client_quit = recv(acceptedSocket->fileDiscriptor, 
-				buffer, sizeof(buffer) - 1, 0);
+				buffer, sizeof(buffer), 0);
 		
 		if (client_quit == 0) {
-			printf("Client closed connection.\n");
+			printf("%s closed the connection.\n", nickname);
 			break;
 		}
-		printf("%s", buffer);
-	}   
+		// print message
+		printf("%s: %s", nickname, buffer);
 
+		// reset buffer
+		buffer[0] = '\0';
+		//memset(buffer, '\0', sizeof(buffer));   
+	}   
 	close(acceptedSocket->fileDiscriptor);
 }
 
@@ -70,5 +84,4 @@ void* wrapper_listen_print(void* arg)
 	struct AcceptedSocket* AcceptedSocket = (struct AcceptedSocket*)arg;
 	sock_listen_print(AcceptedSocket);
 	return NULL;
-
 }

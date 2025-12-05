@@ -64,8 +64,29 @@ int main(void)
 
 	char message[1024];
 	char buffer[1024];
+	char nickname[15];
+
+	// send nickname to server
+	while(1) {
+		printf("Enter nickname: ");
+		fgets(nickname, sizeof(nickname), stdin);
+		if(strlen(nickname) <= 1) {
+			printf("Nickname too short.");
+		} else {
+			break;
+		}
+	}
+
+	int ERR_send = send(SOCK_FileDiscriptor, nickname, sizeof(nickname), 0);
+	if(ERR_send == -1) {
+		printf("Error, could not send nickname.\n");
+	}
+
+	// remove \n 
+	nickname[strlen(nickname) -1] = '\0';
 
 	while(1) {
+		printf("%s: ",nickname);
 		fgets(message, sizeof(message), stdin);
 
 		if(!strcmp(message, "/quit\n")) {
@@ -79,7 +100,6 @@ int main(void)
 		}
 
 	}
-
 	close(SOCK_FileDiscriptor);
 
 	//recv(SOCK_FileDiscriptor, buffer, sizeof(buffer), 0);
