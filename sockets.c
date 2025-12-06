@@ -49,6 +49,8 @@ struct AcceptedSocket* sock_accept_client(int serv_file_discriptor)
 void sock_listen_print(struct AcceptedSocket *acceptedSocket)
 {
 	char buffer[1024];
+	// TODO add nickname and user ID to struct
+	// struct {id, nickname, time when joined}
 	char nickname[17];
 
 	// ask for nickname
@@ -69,12 +71,12 @@ void sock_listen_print(struct AcceptedSocket *acceptedSocket)
 			printf("%s closed the connection.\n", nickname);
 			break;
 		}
+		// TODO: add timestamp
 		// print message
 		printf("%s: %s", nickname, buffer);
 
 		// reset buffer
 		buffer[0] = '\0';
-		//memset(buffer, '\0', sizeof(buffer));   
 	}   
 	close(acceptedSocket->fileDiscriptor);
 }
