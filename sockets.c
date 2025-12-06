@@ -1,6 +1,7 @@
 #include "sockets.h"
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 // since function created on the stack wipe everything
 // after the funciton returned, its importatnt to put
@@ -37,11 +38,20 @@ struct AcceptedSocket* sock_accept_client(int serv_file_discriptor)
 		printf("Error accepting client address.\n");
 	}
 
+	// save time the user joined
+	time_t login_timestamp;
+	time( &login_timestamp );
+	struct tm *ts = localtime(&login_timestamp);
+
 	struct AcceptedSocket *s = 
 		calloc(1, sizeof(struct AcceptedSocket));
 	s->fileDiscriptor = client_file_discriptor;
 	s->address = client_address;
 	s->addressSize = client_address_size;
+	s->timestamp_raw = login_timestamp;
+
+	snprintf(s->timestamp_formatted, sizeof(s->timestamp_formatted), 
+			"%d:%d:%d", ts->tm_hour,ts->tm_min,ts->tm_sec);
 	
 	return s;
 }
@@ -60,7 +70,13 @@ void sock_listen_print(struct AcceptedSocket *acceptedSocket)
 	// remove \n 
 	nickname[strlen(nickname) -1] = '\0';
 
-	printf("%s entered chat\n", nickname);
+	// time of entering chat
+	time_t login_timestamp;
+	time(&login_timestamp);
+	struct tm *ts = localtime(&login_timestamp);
+
+	printf("%d:%d:%d %s entered chat\n",
+			ts->tm_hour,ts->tm_min,ts->tm_sec, nickname);
 
 	// print recieve loop
 	while(1) {
@@ -71,9 +87,11 @@ void sock_listen_print(struct AcceptedSocket *acceptedSocket)
 			printf("%s closed the connection.\n", nickname);
 			break;
 		}
-		// TODO: add timestamp
-		// print message
-		printf("%s: %s", nickname, buffer);
+
+		// print message w/ time
+		time(&login_timestamp);
+		struct tm *ts = localtime(&login_timestamp);
+		printf("%d:%d:%d %s: %s",ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, buffer);
 
 		// reset buffer
 		buffer[0] = '\0';

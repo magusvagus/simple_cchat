@@ -11,6 +11,11 @@ struct AcceptedSocket {
 	int fileDiscriptor;
 	int addressSize;
 	struct sockaddr_in address;
+
+	char nickname[20];
+
+	int timestamp_raw;
+	char timestamp_formatted[20];
 };
 
 struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port);
