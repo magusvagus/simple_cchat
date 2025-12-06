@@ -51,7 +51,7 @@ struct AcceptedSocket* sock_accept_client(int serv_file_discriptor)
 	s->timestamp_raw = login_timestamp;
 
 	snprintf(s->timestamp_formatted, sizeof(s->timestamp_formatted), 
-			"%d:%d:%d", ts->tm_hour,ts->tm_min,ts->tm_sec);
+			"%02d:%02d:%02d", ts->tm_hour,ts->tm_min,ts->tm_sec);
 	
 	return s;
 }
@@ -75,7 +75,7 @@ void sock_listen_print(struct AcceptedSocket *acceptedSocket)
 	time(&login_timestamp);
 	struct tm *ts = localtime(&login_timestamp);
 
-	printf("%d:%d:%d %s entered chat\n",
+	printf("%02d:%02d:%02d %s entered chat\n",
 			ts->tm_hour,ts->tm_min,ts->tm_sec, nickname);
 
 	// print recieve loop
@@ -83,15 +83,21 @@ void sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		int client_quit = recv(acceptedSocket->fileDiscriptor, 
 				buffer, sizeof(buffer), 0);
 		
+
+		time(&login_timestamp);
+		struct tm *ts = localtime(&login_timestamp);
+
 		if (client_quit == 0) {
-			printf("%s closed the connection.\n", nickname);
+			printf("%02d:%02d:%02d %s closed the connection.\n",
+					ts->tm_hour,ts->tm_min,ts->tm_sec, nickname);
 			break;
 		}
 
 		// print message w/ time
 		time(&login_timestamp);
-		struct tm *ts = localtime(&login_timestamp);
-		printf("%d:%d:%d %s: %s",ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, buffer);
+		ts = localtime(&login_timestamp);
+		printf("%02d:%02d:%02d %s: %s",
+				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, buffer);
 
 		// reset buffer
 		buffer[0] = '\0';
