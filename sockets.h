@@ -14,6 +14,7 @@ struct AcceptedSocket {
 
 	char nickname[20];
 
+	int client_id;
 	int timestamp_raw;
 	char timestamp_formatted[20];
 };
