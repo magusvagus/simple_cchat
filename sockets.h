@@ -24,7 +24,7 @@ struct AcceptedSocket {
 	struct AcceptedSocket *user_list;
 };
 
-struct serv_option {
+struct Serv_option {
 	int quit_forcefully;
 	int quit_gracefully;
 	int print_user_list;
@@ -33,7 +33,15 @@ struct serv_option {
 	int message_user;
 };
 
+struct Serv_main_loop {
+	struct AcceptedSocket *s;
+	int serv_file_discriptor;
+	int *quit;
+};
 
+
+void* wrapper_main_loop(void *arg);
+void* serv_main_loop(void *arg);
 struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port);
 struct AcceptedSocket* sock_accept_client(int SERV_FileDisctiptor);
 void sock_listen_print(struct AcceptedSocket *acceptedSocket);

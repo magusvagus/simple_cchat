@@ -29,20 +29,12 @@ int main(void)
 		printf("Error listening on port: %d.\n" ,port);
 	}
 
-	int quit = 0;
-	pthread_t t1;
+	// main loop thread
+	wrapper_main_loop(&serv_file_discriptor);
 
-	while(quit){
-		// this function locks the program until
-		// accept function confirms connection
-		struct AcceptedSocket* acceptedSocket = 
-			sock_accept_client(serv_file_discriptor);
-
-		pthread_t t2;
-		pthread_create(&t2, NULL, wrapper_listen_print, acceptedSocket );
-		
-	}
-
+	// blocking function for testing
+	char test[100];
+	fgets(test, sizeof(test), stdin);
 
 	// close all sockets
 	//close(acceptedSocket->fileDiscriptor);

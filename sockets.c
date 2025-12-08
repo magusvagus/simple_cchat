@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <pthread.h>
 
 // since function created on the stack wipe everything
 // after the funciton returned, its importatnt to put
@@ -90,7 +91,6 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 	while(1) {
 		int client_quit = 
 			recv(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
-		
 
 		time(&login_timestamp);
 		struct tm *ts = localtime(&login_timestamp);
@@ -121,3 +121,32 @@ wrapper_listen_print(void* arg)
 	sock_listen_print(AcceptedSocket);
 	return NULL;
 }
+
+
+void*
+serv_main_loop(void *arg)
+{
+	int *serv_file_discriptor = (int *)arg;
+	while(1){
+		// this function locks the program until
+		// accept function confirms connection
+		struct AcceptedSocket* acceptedSocket = 
+			sock_accept_client(*serv_file_discriptor);
+
+		pthread_t t1;
+		pthread_create(&t1, NULL, wrapper_listen_print, acceptedSocket );
+		
+	}
+	return NULL;
+}
+
+void* wrapper_main_loop(void *arg)
+{
+	void *serv_file_discriptor = arg;
+
+	pthread_t t1;
+	pthread_create(&t1, NULL, serv_main_loop,  serv_file_discriptor);
+	return NULL;
+}
+
+
