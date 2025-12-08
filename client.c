@@ -101,9 +101,5 @@ int main(void)
 
 	}
 	close(SOCK_FileDiscriptor);
-
-	//recv(SOCK_FileDiscriptor, buffer, sizeof(buffer), 0);
-	//printf("%s",buffer);
-
 	return 0;
 }
