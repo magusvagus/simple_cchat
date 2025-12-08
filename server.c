@@ -29,14 +29,17 @@ int main(void)
 		printf("Error listening on port: %d.\n" ,port);
 	}
 
-	while(1){
+	int quit = 0;
+	pthread_t t1;
+
+	while(quit){
 		// this function locks the program until
 		// accept function confirms connection
 		struct AcceptedSocket* acceptedSocket = 
 			sock_accept_client(serv_file_discriptor);
 
-		pthread_t t1;
-		pthread_create(&t1, NULL, wrapper_listen_print, acceptedSocket );
+		pthread_t t2;
+		pthread_create(&t2, NULL, wrapper_listen_print, acceptedSocket );
 		
 	}
 

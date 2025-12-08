@@ -14,10 +14,25 @@ struct AcceptedSocket {
 
 	char nickname[20];
 
+	int kicked_status;
 	int client_id;
 	int timestamp_raw;
 	char timestamp_formatted[20];
+
+	// user_list points to previous created list
+	// *user_list <- *user <-*user2 etc.
+	struct AcceptedSocket *user_list;
 };
+
+struct serv_option {
+	int quit_forcefully;
+	int quit_gracefully;
+	int print_user_list;
+	int print_user_timestamp;
+	int kick_user;
+	int message_user;
+};
+
 
 struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port);
 struct AcceptedSocket* sock_accept_client(int SERV_FileDisctiptor);
