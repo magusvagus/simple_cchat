@@ -2,6 +2,8 @@
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <sys/select.h>
+
 
 int main(void)
 {
@@ -30,11 +32,26 @@ int main(void)
 	}
 
 	// main loop thread
-	wrapper_main_loop(&serv_file_discriptor);
+	fd_set read_fds;
+	int sockfd = serv_file_discriptor;
 
-	// blocking function for testing
-	char test[100];
-	fgets(test, sizeof(test), stdin);
+	FD_ZERO(&read_fds);
+	FD_SET(0, &read_fds);
+	FD_SET(sockfd, &read_fds);
+	
+	// this function locks the program until
+	// accept function confirms connection
+	struct AcceptedSocket* acceptedSocket = 
+		sock_accept_client(serv_file_discriptor);
+
+	pthread_t t1;
+	pthread_create(&t1, NULL, wrapper_listen_print, acceptedSocket );
+
+	while (1) {
+		char hello[] = "hello from the server";
+		send(acceptedSocket->fileDiscriptor, hello, sizeof(hello), 0);
+		sleep(2);
+	}
 
 	// close all sockets
 	//close(acceptedSocket->fileDiscriptor);

@@ -4,6 +4,8 @@
 #include <time.h>
 #include <pthread.h>
 
+struct Serv_options serv_option = {0};
+
 // since function created on the stack wipe everything
 // after the funciton returned, its importatnt to put
 // the socket on the heap.
@@ -121,32 +123,4 @@ wrapper_listen_print(void* arg)
 	sock_listen_print(AcceptedSocket);
 	return NULL;
 }
-
-
-void*
-serv_main_loop(void *arg)
-{
-	int *serv_file_discriptor = (int *)arg;
-	while(1){
-		// this function locks the program until
-		// accept function confirms connection
-		struct AcceptedSocket* acceptedSocket = 
-			sock_accept_client(*serv_file_discriptor);
-
-		pthread_t t1;
-		pthread_create(&t1, NULL, wrapper_listen_print, acceptedSocket );
-		
-	}
-	return NULL;
-}
-
-void* wrapper_main_loop(void *arg)
-{
-	void *serv_file_discriptor = arg;
-
-	pthread_t t1;
-	pthread_create(&t1, NULL, serv_main_loop,  serv_file_discriptor);
-	return NULL;
-}
-
 

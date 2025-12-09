@@ -4,6 +4,7 @@
 #include <arpa/inet.h> // inet_pton
 #include <string.h>
 #include <unistd.h>
+#include <sys/select.h>
 
 
 int main(void)
@@ -85,20 +86,42 @@ int main(void)
 	// remove \n 
 	nickname[strlen(nickname) -1] = '\0';
 
+	fd_set read_fds;
+	int sockfd = SOCK_FileDiscriptor;
+
 	while(1) {
-		printf("%s: ",nickname);
-		fgets(message, sizeof(message), stdin);
+		FD_ZERO(&read_fds);
+		FD_SET(0, &read_fds);
+		FD_SET(sockfd, &read_fds);
 
-		if(!strcmp(message, "/quit\n")) {
-			close(SOCK_FileDiscriptor);
-			break;
+		if (select(sockfd + 1, &read_fds, NULL, NULL, NULL) > 0) {
+			if (FD_ISSET(0, &read_fds)) {
+
+				printf("%s: ",nickname);
+				char message[256];
+				fgets(message, sizeof(message), stdin);
+
+				if(!strcmp(message, "/quit\n")) {
+					close(SOCK_FileDiscriptor);
+					break;
+				}
+
+				int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
+				if(ERR_send == -1) {
+					printf("Error, could not send message.\n");
+				}
+				message[0] = '\0';
+			}
 		}
+		if (FD_ISSET(sockfd, &read_fds)) {
+			// message recieved
+			char r_msg[256];
+			int client_quit = recv(SOCK_FileDiscriptor, 
+					r_msg, sizeof(r_msg), 0);
 
-		int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
-		if(ERR_send == -1) {
-			printf("Error, could not send message.\n");
+			printf("Recieved: %s\n",r_msg);
+			r_msg[0] = '\0';
 		}
-
 	}
 	close(SOCK_FileDiscriptor);
 	return 0;

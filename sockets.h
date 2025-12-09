@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 struct AcceptedSocket {
 	int fileDiscriptor;
 	int addressSize;
@@ -24,7 +25,7 @@ struct AcceptedSocket {
 	struct AcceptedSocket *user_list;
 };
 
-struct Serv_option {
+struct Serv_options {
 	int quit_forcefully;
 	int quit_gracefully;
 	int print_user_list;
@@ -39,9 +40,8 @@ struct Serv_main_loop {
 	int *quit;
 };
 
+extern struct Serv_options serv_option;
 
-void* wrapper_main_loop(void *arg);
-void* serv_main_loop(void *arg);
 struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port);
 struct AcceptedSocket* sock_accept_client(int SERV_FileDisctiptor);
 void sock_listen_print(struct AcceptedSocket *acceptedSocket);
