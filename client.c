@@ -65,15 +65,19 @@ int main(void)
 
 	char message[1024];
 	char buffer[1024];
-	char nickname[15];
+	char nickname[17];
 
 	// send nickname to server
 	while(1) {
 		printf("Enter nickname: ");
 		fgets(nickname, sizeof(nickname), stdin);
 		if(strlen(nickname) <= 1) {
-			printf("Nickname too short.");
-		} else {
+			printf("Nickname too short (2 - 15 characters.)");
+		}
+		else if (strlen(nickname) > 15) {
+			printf("Nickname too long (2 - 15 characters.)");
+		} 
+		else {
 			break;
 		}
 	}
