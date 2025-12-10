@@ -32,6 +32,7 @@ int main(void)
 	}
 
 	// main loop thread
+	//wrapper_main_loop(&serv_file_discriptor);
 	fd_set read_fds;
 	int sockfd = serv_file_discriptor;
 
@@ -39,10 +40,17 @@ int main(void)
 	FD_SET(0, &read_fds);
 	FD_SET(sockfd, &read_fds);
 	
+	struct AcceptedSocket* acceptedSocket = NULL;
+
 	// this function locks the program until
 	// accept function confirms connection
-	struct AcceptedSocket* acceptedSocket = 
+	//
+	// create a new client struct and point it 
+	// to the user_struct
+	struct AcceptedSocket* as_client = 
 		sock_accept_client(serv_file_discriptor);
+	as_client->user_list = acceptedSocket;
+	acceptedSocket = as_client;
 
 	pthread_t t1;
 	pthread_create(&t1, NULL, wrapper_listen_print, acceptedSocket );
