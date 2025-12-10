@@ -41,6 +41,7 @@ AcceptedSocket* sock_accept_client(int serv_file_discriptor)
 	int client_file_discriptor = 
 		accept(serv_file_discriptor, 
 				(struct sockaddr *)&client_address, &client_address_size);
+
 	if(client_file_discriptor == -1) {
 		printf("Error accepting client address.\n");
 	}

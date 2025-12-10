@@ -40,25 +40,28 @@ int main(void)
 	FD_SET(0, &read_fds);
 	FD_SET(sockfd, &read_fds);
 	
-	struct AcceptedSocket* acceptedSocket = NULL;
-
-	// this function locks the program until
-	// accept function confirms connection
-	//
-	// create a new client struct and point it 
-	// to the user_struct
-	struct AcceptedSocket* as_client = 
-		sock_accept_client(serv_file_discriptor);
-	as_client->user_list = acceptedSocket;
-	acceptedSocket = as_client;
-
-	pthread_t t1;
-	pthread_create(&t1, NULL, wrapper_listen_print, acceptedSocket );
+	struct AcceptedSocket *sock_client_list = NULL;
 
 	while (1) {
-		char hello[] = "hello from the server";
-		send(acceptedSocket->fileDiscriptor, hello, sizeof(hello), 0);
-		sleep(2);
+		// this function locks the program until
+		// accept function confirms connection
+		//
+		// create a new client struct and point it 
+		// to the user_list struct member
+		struct AcceptedSocket *new_client = 
+			sock_accept_client(serv_file_discriptor);
+		new_client->user_list = sock_client_list;
+		sock_client_list = new_client;
+
+		pthread_t t1;
+		pthread_create(&t1, NULL, wrapper_listen_print, sock_client_list );
+
+		// send 10 msg's for testing
+		for (int i = 0; i < 10; i++) {
+			char hello[] = "hello from the server";
+			send(sock_client_list->fileDiscriptor, hello, sizeof(hello), 0);
+			sleep(2);
+		}
 	}
 
 	// close all sockets
