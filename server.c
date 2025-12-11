@@ -35,10 +35,6 @@ int main(void)
 	//wrapper_main_loop(&serv_file_discriptor);
 	fd_set read_fds;
 	int sockfd = serv_file_discriptor;
-
-	FD_ZERO(&read_fds);
-	FD_SET(0, &read_fds);
-	FD_SET(sockfd, &read_fds);
 	
 	struct AcceptedSocket *sock_client_list = NULL;
 

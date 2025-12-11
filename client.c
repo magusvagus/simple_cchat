@@ -90,16 +90,25 @@ int main(void)
 	// remove \n 
 	nickname[strlen(nickname) -1] = '\0';
 
-	fd_set read_fds;
-	int sockfd = SOCK_FileDiscriptor;
+	/* 
+	The socket file descriptor (FD) is not fixed — it gets the next available integer in 
+	the process's FD table when created (e.g., 3, 4, etc.).
+	So while 0, 1, 2 are reserved for stdin, stdout, stderr, a socket can be assigned 
+	any higher number — or even reuse 0, 1, 2 if they were closed. 
+	*/
+	fd_set fd_bitmap;
+	int sock_fd = SOCK_FileDiscriptor;
 
 	while(1) {
-		FD_ZERO(&read_fds);
-		FD_SET(0, &read_fds);
-		FD_SET(sockfd, &read_fds);
+		FD_ZERO(&fd_bitmap);
+		FD_SET(0, &fd_bitmap);
+		FD_SET(sock_fd, &fd_bitmap);
 
-		if (select(sockfd + 1, &read_fds, NULL, NULL, NULL) > 0) {
-			if (FD_ISSET(0, &read_fds)) {
+		if (select(sock_fd + 1, &fd_bitmap, NULL, NULL, NULL) > 0) {
+			/*File descriptors are global to the process.
+			0 always refers to the first entry in the FD table, reserved for stdin.
+			When select() returns, FD_ISSET(0, ...) tells you if stdin has input ready.*/
+			if (FD_ISSET(0, &fd_bitmap)) {
 
 				printf("%s: ",nickname);
 				char message[256];
@@ -117,11 +126,10 @@ int main(void)
 				message[0] = '\0';
 			}
 		}
-		if (FD_ISSET(sockfd, &read_fds)) {
+		if (FD_ISSET(sock_fd, &fd_bitmap)) {
 			// message recieved
 			char r_msg[256];
-			int client_quit = recv(SOCK_FileDiscriptor, 
-					r_msg, sizeof(r_msg), 0);
+			int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
 
 			printf("Recieved: %s\n",r_msg);
 			r_msg[0] = '\0';
