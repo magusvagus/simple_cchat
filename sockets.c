@@ -107,6 +107,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		// print message w/ time
 		time(&login_timestamp);
 		ts = localtime(&login_timestamp);
+		// TODO send back/ echo the message to the client/s
 		printf("%02d:%02d:%02d %s: %s",
 				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, buffer);
 
