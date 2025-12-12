@@ -5,7 +5,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/select.h>
-#include <ncurses.h>
 
 
 int main(void)
@@ -100,65 +99,42 @@ int main(void)
 	fd_set fd_bitmap;
 	int sock_fd = SOCK_FileDiscriptor;
 
-	// ncurses
-	initscr(); // start curses mode
-	
-	// rs - root screan
-	int rs_row;
-	int rs_col;
-
-	getmaxyx(stdscr,rs_row,rs_col);
-
-	WINDOW *recv_win;
-	WINDOW *send_win;
-
-	recv_win = newwin( rs_row - 4, rs_col, NULL, NULL);
-	send_win = newwin(4, rs_col, rs_row - 4, NULL);
-
-	box(recv_win, 0,0);
-	box(send_win, 0,0);
-	
-	nodelay(send_win, TRUE);
-	nodelay(recv_win, TRUE);
-
-	refresh();
-	wrefresh(send_win);
-	wrefresh(recv_win);
-	
-	// window title
-	mvwprintw(recv_win, 0, 1, "Chatroom");
-	wrefresh(recv_win);
-
 	while(1) {
-		mvwprintw(send_win, 1, 1, "%s: ",nickname);
-		char message[256];
-		wgetch(send_win);
-		wrefresh(send_win);
-		//fgets(message, sizeof(message), stdin);
+		FD_ZERO(&fd_bitmap);
+		FD_SET(0, &fd_bitmap);
+		FD_SET(sock_fd, &fd_bitmap);
 
-		if(!strcmp(message, "/quit\n")) {
-			close(SOCK_FileDiscriptor);
-			break;
+		if (select(sock_fd + 1, &fd_bitmap, NULL, NULL, NULL) > 0) {
+			/*File descriptors are global to the process.
+			0 always refers to the first entry in the FD table, reserved for stdin.
+			When select() returns, FD_ISSET(0, ...) tells you if stdin has input ready.*/
+			if (FD_ISSET(0, &fd_bitmap)) {
+
+				printf("%s: ",nickname);
+				char message[256];
+				fgets(message, sizeof(message), stdin);
+
+				if(!strcmp(message, "/quit\n")) {
+					close(SOCK_FileDiscriptor);
+					break;
+				}
+
+				int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
+				if(ERR_send == -1) {
+					printf("Error, could not send message.\n");
+				}
+				message[0] = '\0';
+			}
 		}
+		if (FD_ISSET(sock_fd, &fd_bitmap)) {
+			// message recieved
+			char r_msg[256];
+			int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
 
-		int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
-		if(ERR_send == -1) {
-			printf("Error, could not send message.\n");
+			printf("Recieved: %s\n",r_msg);
+			r_msg[0] = '\0';
 		}
-		message[0] = '\0';
-
-
-		// message recieved
-		char r_msg[256];
-		int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
-		mvwprintw(recv_win, 1, 1, "Recieved: %s\n",r_msg);
-		wrefresh(recv_win);
-
-		//printf("Recieved: %s\n",r_msg);
-		r_msg[0] = '\0';
 	}
-
-	endwin(); // end curses mode
 	close(SOCK_FileDiscriptor);
 	return 0;
 }
