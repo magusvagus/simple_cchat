@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <sys/select.h>
 #include <ncurses.h>
+#include <ctype.h>
 
 
 int main(void)
@@ -129,33 +130,74 @@ int main(void)
 	mvwprintw(recv_win, 0, 1, "Chatroom");
 	wrefresh(recv_win);
 
-	while(1) {
-		mvwprintw(send_win, 1, 1, "%s: ",nickname);
-		char message[256];
-		wgetch(send_win);
-		wrefresh(send_win);
+	int ch;
+	int pos = 0;
+
+	nodelay(send_win, TRUE);
+	timeout(0);
+	noecho();
+
+	int i = 0;
+	int c = 1;
+
+while (1) {
+    // Redraw prompt and current input
+    mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
+    wrefresh(send_win);
+
+	ch = getch();
+
+	if (ch != ERR) {
+		// TODO needs check for backspace
+		if (ch == '\n' || ch == '\r') {
+			// TODO if input comes from ncurses, nothing gets send to server, as long main loop in client stops.
+			int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
+			if(ERR_send == -1) {
+				printf("Error, could not send message.\n");
+			}
+			i = 0;
+			memset(message, 0, sizeof(message));
+			wmove(send_win, 1,1);
+			wclrtoeol(send_win); // clear line to end
+    		mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
+			wrefresh(send_win);
+		}
+		else {
+			message[i] = ch;
+			wmove(send_win, 1, 1);
+			wrefresh(send_win);
+			i++;
+		}
+	}
+
 		//fgets(message, sizeof(message), stdin);
 
-		if(!strcmp(message, "/quit\n")) {
-			close(SOCK_FileDiscriptor);
-			break;
-		}
+		// TODO fix, and adjust for ncurses
+		// if(!strcmp(message, "/quit\n")) {
+		// 	close(SOCK_FileDiscriptor);
+		// 	break;
+		// }
 
-		int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
-		if(ERR_send == -1) {
-			printf("Error, could not send message.\n");
-		}
-		message[0] = '\0';
+		// int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
+		// if(ERR_send == -1) {
+		// 	printf("Error, could not send message.\n");
+		// }
+		// message[0] = '\0';
 
 
+		// TODO recv blocks loop, might use select() or change socket flags to not block loop
 		// message recieved
-		char r_msg[256];
-		int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
-		mvwprintw(recv_win, 1, 1, "Recieved: %s\n",r_msg);
+		//char r_msg[256];
+		char r_msg[] = "test message";
+		//int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
+		mvwprintw(recv_win, 1, 1, "Recieved: %s %d\n",r_msg, c);
+		c++;
 		wrefresh(recv_win);
 
 		//printf("Recieved: %s\n",r_msg);
 		r_msg[0] = '\0';
+
+		usleep(10000);
 	}
 
 	endwin(); // end curses mode
