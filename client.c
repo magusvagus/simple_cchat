@@ -133,7 +133,7 @@ int main(void)
 	int ch;
 	int pos = 0;
 
-	nodelay(send_win, TRUE);
+	nodelay(stdscr, TRUE);
 	timeout(0);
 	noecho();
 
@@ -151,7 +151,8 @@ while (1) {
 		// TODO needs check for backspace
 		if (ch == '\n' || ch == '\r') {
 			// TODO if input comes from ncurses, nothing gets send to server, as long main loop in client stops.
-			int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
+			message[strlen(message)] = '\n';
+			int ERR_send = send(SOCK_FileDiscriptor, message, strlen(message), 0);
 			if(ERR_send == -1) {
 				printf("Error, could not send message.\n");
 			}
