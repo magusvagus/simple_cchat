@@ -165,12 +165,8 @@ while (1) {
 			wrefresh(send_win);
 		}
 		else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
-			//waddch(send_win,' ');
 			i--;
 			message[i] = ' ';
-			// wdelch(send_win);
-			// mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
-			// wrefresh(send_win);
 		}
 		else {
 			message[i] = ch;

@@ -95,6 +95,10 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		int client_quit = 
 			recv(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
 
+		if ( client_quit > 0) {
+			buffer[client_quit] = '\0';
+		}
+
 		time(&login_timestamp);
 		struct tm *ts = localtime(&login_timestamp);
 
