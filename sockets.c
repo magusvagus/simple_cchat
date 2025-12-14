@@ -9,8 +9,8 @@ struct Serv_options serv_option = {0};
 // since function created on the stack wipe everything
 // after the funciton returned, its importatnt to put
 // the socket on the heap.
-struct 
-sockaddr_in* sock_create_IPV4_addr( char* ip, int port) 
+struct sockaddr_in* 
+sock_create_IPV4_addr( char* ip, int port) 
 {
 	struct sockaddr_in *address;
 	address = calloc(1, sizeof(struct sockaddr_in));
@@ -28,8 +28,8 @@ sockaddr_in* sock_create_IPV4_addr( char* ip, int port)
 }
 
 
-struct 
-AcceptedSocket* sock_accept_client(int serv_file_discriptor) 
+struct AcceptedSocket* 
+sock_accept_client(int serv_file_discriptor) 
 {
 	static int client_id = 0;
 

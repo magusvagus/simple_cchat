@@ -160,6 +160,8 @@ int main(void)
 					break;
 				}
 
+				// TODO instead of sending raw text buffer, an type struct should be only send/ recieved
+				// so one recv/send function can parse multiple types of signals/ requests
 				int ERR_send = send(SOCK_FileDiscriptor, message, strlen(message), 0);
 				if(ERR_send == -1) {
 					printf("Error, could not send message.\n");
