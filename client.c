@@ -133,9 +133,11 @@ int main(void)
 	int ch;
 	int pos = 0;
 
+	cbreak();
 	nodelay(stdscr, TRUE);
 	timeout(0);
 	noecho();
+	keypad(stdscr, TRUE);
 
 	int i = 0;
 	int c = 1;
@@ -150,8 +152,7 @@ while (1) {
 	if (ch != ERR) {
 		// TODO needs check for backspace
 		if (ch == '\n' || ch == '\r') {
-			// TODO if input comes from ncurses, nothing gets send to server, as long main loop in client stops.
-			message[strlen(message)] = '\n';
+			message[i] = '\n';
 			int ERR_send = send(SOCK_FileDiscriptor, message, strlen(message), 0);
 			if(ERR_send == -1) {
 				printf("Error, could not send message.\n");
@@ -162,6 +163,14 @@ while (1) {
 			wclrtoeol(send_win); // clear line to end
     		mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
 			wrefresh(send_win);
+		}
+		else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
+			//waddch(send_win,' ');
+			i--;
+			message[i] = ' ';
+			// wdelch(send_win);
+			// mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
+			// wrefresh(send_win);
 		}
 		else {
 			message[i] = ch;
