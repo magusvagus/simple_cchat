@@ -153,6 +153,12 @@ while (1) {
 		// TODO needs check for backspace
 		if (ch == '\n' || ch == '\r') {
 			message[i] = '\n';
+
+			if (!strcmp(message, "/quit\n")) {
+				close(SOCK_FileDiscriptor);
+				break;
+			}
+
 			int ERR_send = send(SOCK_FileDiscriptor, message, strlen(message), 0);
 			if(ERR_send == -1) {
 				printf("Error, could not send message.\n");
