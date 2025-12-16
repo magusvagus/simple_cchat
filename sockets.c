@@ -6,6 +6,7 @@
 #include <pthread.h>
 
 struct Serv_options serv_option = {0};
+struct tm *ts = NULL;
 
 // since function created on the stack wipe everything
 // after the funciton returned, its importatnt to put
@@ -48,13 +49,14 @@ sock_accept_client(int serv_file_discriptor)
 	}
 
 	// set timestamp
-	struct tm *ts = timestamp();
+	ts = timestamp();
 
 	struct AcceptedSocket *s = 
 		calloc(1, sizeof(struct AcceptedSocket));
 	s->fileDiscriptor = client_file_discriptor;
 	s->address = client_address;
 	s->addressSize = client_address_size;
+	// TODO check if raw time is in ts struct
 	//s->timestamp_raw = login_timestamp;
 	s->client_id = client_id++;
 
@@ -98,8 +100,8 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 			buffer[client_quit] = '\0';
 		}
 
-		time(&login_timestamp);
-		struct tm *ts = localtime(&login_timestamp);
+		// update timestamp
+		ts = timestamp();
 
 		if (client_quit == 0) {
 			printf("%02d:%02d:%02d %s closed the connection.\n",
@@ -107,9 +109,8 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 			break;
 		}
 
-		// print message w/ time
-		time(&login_timestamp);
-		ts = localtime(&login_timestamp);
+		// update timestamp
+		ts = timestamp();
 
 		// TODO send back/ echo the message to the client/s
 		printf("%02d:%02d:%02d %s: %s",
