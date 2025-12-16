@@ -1,4 +1,5 @@
 #include "sockets.h"
+#include "utils.h"
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
@@ -46,17 +47,15 @@ sock_accept_client(int serv_file_discriptor)
 		printf("Error accepting client address.\n");
 	}
 
-	// save time the user joined
-	time_t login_timestamp;
-	time( &login_timestamp );
-	struct tm *ts = localtime(&login_timestamp);
+	// set timestamp
+	struct tm *ts = timestamp();
 
 	struct AcceptedSocket *s = 
 		calloc(1, sizeof(struct AcceptedSocket));
 	s->fileDiscriptor = client_file_discriptor;
 	s->address = client_address;
 	s->addressSize = client_address_size;
-	s->timestamp_raw = login_timestamp;
+	//s->timestamp_raw = login_timestamp;
 	s->client_id = client_id++;
 
 	snprintf(s->timestamp_formatted, sizeof(s->timestamp_formatted), 
