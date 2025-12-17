@@ -148,7 +148,7 @@ int main(void)
 		mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
 		wrefresh(send_win);
 
-		err_screen();
+		err_screen("test error");
 		ch = getch();
 
 		if (ch != ERR) {

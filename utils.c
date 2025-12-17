@@ -13,25 +13,36 @@ timestamp()
 }
 
 void
-err_screen() 
+err_screen( char *err_msg) 
 {
 	initscr(); // start curses mode
 
 	int rs_row;
 	int rs_col;
+	int errw_row;
+	int errw_col;
 
 	// get length and width of terminal
 	getmaxyx(stdscr,rs_row,rs_col);
 
 	WINDOW *err_window;
-	err_window = newwin( (rs_row / 2) - 13, (rs_col / 2) - 9, (rs_row / 2), (rs_row / 2));
+	err_window = newwin( (rs_row/2) - 13, (rs_col/2) - 9, (rs_row/2), (rs_row/2));
 	box(err_window, 0,0);
 
-	mvwprintw(err_window, 1, 1, "test error");
+	getmaxyx(err_window, errw_row, errw_col);
+
+	mvwprintw(err_window, 1, 1, "%s",err_msg);
+
+	attron(A_REVERSE);
+	mvwprintw(err_window, 2, (errw_col/2), "OK");
+	attroff(A_REVERSE);
+
 	int ch;
 
 	refresh();
 	wrefresh(err_window);
+
+	// close window if input id given
 	while (1) {
 		ch = getch();
 		if (ch != ERR) {
