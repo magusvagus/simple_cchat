@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <time.h>
 #include <ncurses.h>
+#include <string.h>
 
 
 struct tm* 
@@ -13,29 +14,51 @@ timestamp()
 }
 
 void
-err_screen( char *err_msg) 
+err_screen( WINDOW *window, char *err_msg) 
 {
+	if (window == NULL) {
+		window = stdscr;
+	}
+
 	initscr(); // start curses mode
 
-	int rs_row;
-	int rs_col;
-	int errw_row;
-	int errw_col;
+	int w_max_y;
+	int w_max_x;
 
-	// get length and width of terminal
-	getmaxyx(stdscr,rs_row,rs_col);
+	int w_center_y;
+	int w_center_x;
+
+	int errw_max_y;
+	int errw_max_x;
+
+	int errw_center_y;
+	int errw_center_x;
+
+	int err_msg_len;
+
+	// get length and width of terminal/ window
+	getmaxyx(window, w_max_y, w_max_x);
+
+	w_center_y = w_max_y/2;
+	w_center_x = w_max_x/2;
 
 	WINDOW *err_window;
-	err_window = newwin( (rs_row/2) - 13, (rs_col/2) - 9, (rs_row/2), (rs_row/2));
+	err_window = newwin(w_center_y - 10, w_max_x - 10, w_center_y, 5);
 	box(err_window, 0,0);
 
-	getmaxyx(err_window, errw_row, errw_col);
+	getmaxyx(err_window, errw_max_y, errw_max_x);
+	
+	errw_center_y = errw_max_y/2;
+	errw_center_x = errw_max_x/2;
 
-	mvwprintw(err_window, 1, 1, "%s",err_msg);
+	err_msg_len = strlen(err_msg);
 
-	attron(A_REVERSE);
-	mvwprintw(err_window, 2, (errw_col/2), "OK");
-	attroff(A_REVERSE);
+	mvwprintw(err_window, errw_center_y-1, errw_center_x - err_msg_len/2, "%s",err_msg);
+
+
+	wattron(err_window,A_REVERSE);
+	mvwprintw(err_window, errw_center_y+1, errw_center_x-1, "OK");
+	wattroff(err_window,A_REVERSE);
 
 	int ch;
 
