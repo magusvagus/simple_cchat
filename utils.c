@@ -2,6 +2,7 @@
 #include <time.h>
 #include <ncurses.h>
 #include <string.h>
+#include <time.h>
 
 
 struct tm* 
@@ -19,8 +20,6 @@ err_screen( WINDOW *window, char *err_msg)
 	if (window == NULL) {
 		window = stdscr;
 	}
-
-	initscr(); // start curses mode
 
 	int w_max_y;
 	int w_max_x;
@@ -55,9 +54,8 @@ err_screen( WINDOW *window, char *err_msg)
 
 	mvwprintw(err_window, errw_center_y-1, errw_center_x - err_msg_len/2, "%s",err_msg);
 
-
 	wattron(err_window,A_REVERSE);
-	mvwprintw(err_window, errw_center_y+1, errw_center_x-1, "OK");
+	mvwprintw(err_window, errw_center_y+1, errw_center_x-3, "> OK <");
 	wattroff(err_window,A_REVERSE);
 
 	int ch;
@@ -66,11 +64,8 @@ err_screen( WINDOW *window, char *err_msg)
 	wrefresh(err_window);
 
 	// close window if input id given
-	while (1) {
-		ch = getch();
-		if (ch != ERR) {
-			delwin(err_window);
-			break;
-		}
-	}
+	ch = wgetch(err_window);
+	wclear(err_window);
+	wrefresh(err_window);
+	delwin(err_window);
 }

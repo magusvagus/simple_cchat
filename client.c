@@ -143,12 +143,19 @@ int main(void)
 	int i = 0;
 	int c = 1;
 
+	int test = 0;
+
 	while (1) {
 		// Redraw prompt and current input
 		mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
 		wrefresh(send_win);
 
-		err_screen(recv_win,"test error");
+		// test error function
+		if (!test) {
+			err_screen(NULL,"test error");
+			test = 1;
+		}
+
 		ch = getch();
 
 		if (ch != ERR) {
