@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <sys/select.h>
 #include <ncurses.h>
+#include "utils.h"
 #include <ctype.h>
 
 
@@ -113,8 +114,8 @@ int main(void)
 	WINDOW *recv_win;
 	WINDOW *send_win;
 
-	recv_win = newwin( rs_row - 4, rs_col, NULL, NULL);
-	send_win = newwin(4, rs_col, rs_row - 4, NULL);
+	recv_win = newwin( rs_row - 4, rs_col, 0, 0);
+	send_win = newwin(4, rs_col, rs_row - 4, 0);
 
 	box(recv_win, 0,0);
 	box(send_win, 0,0);
@@ -147,6 +148,7 @@ int main(void)
 		mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
 		wrefresh(send_win);
 
+		err_screen();
 		ch = getch();
 
 		if (ch != ERR) {
