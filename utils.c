@@ -42,9 +42,6 @@ err_screen( WINDOW *p_window, char *err_msg)
 
 	int err_msg_len;
 
-	// getch input
-	int ch;
-
 	// get length and width of terminal/ or given window
 	getmaxyx(p_window, wy_max, wx_max);
 
@@ -70,13 +67,14 @@ err_screen( WINDOW *p_window, char *err_msg)
 
 	err_msg_len = strlen(err_msg);
 
-	// error message
 	mvwprintw(p_pop_win, popy_mid-1, popx_mid - err_msg_len/2, "%s",err_msg);
 
-	// print ok in reverse colors
+	// print in reverse colors
 	wattron(p_pop_win,A_REVERSE);
 	mvwprintw(p_pop_win, popy_mid+1, popx_mid-3, "> OK <");
 	wattroff(p_pop_win,A_REVERSE);
+
+	int ch;
 
 	refresh();
 	wrefresh(p_pop_win);

@@ -173,7 +173,7 @@ int main(void)
 				// so one recv/send function can parse multiple types of signals/ requests
 				int ERR_send = send(SOCK_FileDiscriptor, message, strlen(message), 0);
 				if(ERR_send == -1) {
-					printf("Error, could not send message.\n");
+					err_screen(NULL,"Error, could not send message.\n");
 				}
 
 				i = 0;
