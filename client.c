@@ -29,7 +29,7 @@ int main(void)
 
 	int SOCK_FileDiscriptor = socket(AF_INET,SOCK_STREAM,0);
 	if (SOCK_FileDiscriptor == -1){
-		printf("Error creating file discriptor.\n");
+		err_screen(NULL,"Error creating file discriptor.\n");
 	}
 
 	// test ip
@@ -52,7 +52,7 @@ int main(void)
 	// struct as if it points to sockaddr.
 	int err = connect(SOCK_FileDiscriptor, (struct sockaddr *)&address, sizeof(address));
 	if(err == -1){
-		printf("Error connecting to file discriptor\n");
+		err_screen(NULL,"Error connecting to file discriptor\n");
 	}else{
 		printf("Connected\n");
 	}
@@ -87,7 +87,7 @@ int main(void)
 
 	int ERR_send = send(SOCK_FileDiscriptor, nickname, sizeof(nickname), 0);
 	if(ERR_send == -1) {
-		printf("Error, could not send nickname.\n");
+		err_screen(NULL,"Error, could not send nickname.\n");
 	}
 
 	// remove \n 
