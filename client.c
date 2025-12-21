@@ -7,7 +7,6 @@
 #include <sys/select.h>
 #include <ncurses.h>
 #include "utils.h"
-#include <ctype.h>
 
 
 int main(void)
@@ -29,7 +28,7 @@ int main(void)
 
 	int SOCK_FileDiscriptor = socket(AF_INET,SOCK_STREAM,0);
 	if (SOCK_FileDiscriptor == -1){
-		err_screen(NULL,"Error creating file discriptor.\n");
+		err_screen(NULL, NULL,"Error creating file discriptor.\n");
 	}
 
 	// test ip
@@ -52,7 +51,7 @@ int main(void)
 	// struct as if it points to sockaddr.
 	int err = connect(SOCK_FileDiscriptor, (struct sockaddr *)&address, sizeof(address));
 	if(err == -1){
-		err_screen(NULL,"Error connecting to file discriptor\n");
+		err_screen(NULL, NULL,"Error connecting to file discriptor\n");
 	}else{
 		printf("Connected\n");
 	}
@@ -75,10 +74,10 @@ int main(void)
 		printf("Enter nickname: ");
 		fgets(nickname, sizeof(nickname), stdin);
 		if(strlen(nickname) <= 1) {
-			printf("Nickname too short (2 - 15 characters.)");
+			err_screen(NULL,NULL,"Nickname too short (2 - 15 characters.)");
 		}
 		else if (strlen(nickname) > 15) {
-			printf("Nickname too long (2 - 15 characters.)");
+			err_screen(NULL,NULL,"Nickname too long (2 - 15 characters.)");
 		} 
 		else {
 			break;
@@ -87,7 +86,7 @@ int main(void)
 
 	int ERR_send = send(SOCK_FileDiscriptor, nickname, sizeof(nickname), 0);
 	if(ERR_send == -1) {
-		err_screen(NULL,"Error, could not send nickname.\n");
+		err_screen(NULL, NULL,"Error, could not send nickname.\n");
 	}
 
 	// remove \n 
@@ -152,14 +151,13 @@ int main(void)
 
 		// test error function
 		if (!test) {
-			err_screen(NULL,"test error");
+			err_screen(NULL, "TEST ERR","test error");
 			test = 1;
 		}
 
 		ch = getch();
 
 		if (ch != ERR) {
-			// TODO needs check for backspace
 			if (ch == '\n' || ch == '\r') {
 				message[i] = '\n';
 
@@ -173,7 +171,7 @@ int main(void)
 				// so one recv/send function can parse multiple types of signals/ requests
 				int ERR_send = send(SOCK_FileDiscriptor, message, strlen(message), 0);
 				if(ERR_send == -1) {
-					err_screen(NULL,"Error, could not send message.\n");
+					err_screen(NULL, NULL,"Error, could not send message.\n");
 				}
 
 				i = 0;

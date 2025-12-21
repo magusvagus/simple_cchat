@@ -15,7 +15,7 @@ timestamp()
 }
 
 void
-err_screen( WINDOW *p_window, char *err_msg) 
+err_screen( WINDOW *p_window, char *win_title, char *err_msg) 
 {
 	if (p_window == NULL) {
 		p_window = stdscr;
@@ -58,6 +58,10 @@ err_screen( WINDOW *p_window, char *err_msg)
 	WINDOW *p_pop_win;
 	p_pop_win = newwin(pop_height, pop_width, popy_start, popx_start);
 	box(p_pop_win, 0,0);
+
+	if (win_title != NULL) {
+		mvwprintw(p_pop_win, 0, 1, "%s", win_title);
+	}
 
 	getmaxyx(p_pop_win, popy_max, popx_max);
 	

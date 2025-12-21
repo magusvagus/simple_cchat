@@ -4,6 +4,6 @@
 #define UTILS_H
 
 struct tm* timestamp();
-void err_screen(WINDOW *p_window, char *err_msg);
+void err_screen(WINDOW *p_window,char *win_title, char *err_msg);
 
 #endif 
