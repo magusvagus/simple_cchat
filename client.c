@@ -7,6 +7,7 @@
 #include <sys/select.h>
 #include <ncurses.h>
 #include "utils.h"
+#include "sockets.h"
 
 
 int main(void)
@@ -16,18 +17,9 @@ int main(void)
 		err_screen(NULL, NULL,"Error creating file discriptor.\n");
 	}
 
-	// test ip
-	char* ip = "127.0.0.1";
-	struct sockaddr_in address;
-	address.sin_family = AF_INET;
-	// h to network short (big endian to liitle endinan)
-	address.sin_port = htons(2000); 
-	// since the ip variable is a string, we need to convert each
-	// of the numbers to a unsigned integer
-	// (inet presentation to network)
-	inet_pton(AF_INET, ip, &address.sin_addr.s_addr);
+	struct sockaddr_in *address = sock_create_IPV4_addr("127.0.0.1", 2000);
 
-	int err = connect(SOCK_FileDiscriptor, (struct sockaddr *)&address, sizeof(address));
+	int err = connect(SOCK_FileDiscriptor, (struct sockaddr *)address, sizeof(*address));
 	if(err == -1){
 		err_screen(NULL, NULL,"Error connecting to file discriptor\n");
 	}else{
