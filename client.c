@@ -11,21 +11,6 @@
 
 int main(void)
 {
-	/*
-	Socket function requires 3 parameters
-	- adress family (ipv4/ ipv6) 
-		AF_INET = adress family ipv4
-	- socket type (tcp/ udp)
-	- protocol layer to be used underneth socket layer
-		TCP/UDP are OSI layer 4, this value
-		defines the layer underneth to be given
-		to after the socket is done processing
-
-		O defines using IP, but it can be configured
-		to use different network layers
-	- returns INT -1 if error occurs
-	*/ 		
-
 	int SOCK_FileDiscriptor = socket(AF_INET,SOCK_STREAM,0);
 	if (SOCK_FileDiscriptor == -1){
 		err_screen(NULL, NULL,"Error creating file discriptor.\n");
@@ -42,28 +27,12 @@ int main(void)
 	// (inet presentation to network)
 	inet_pton(AF_INET, ip, &address.sin_addr.s_addr);
 
-
-	// asks for a file discriptor, address , the length of address
-	// since sockaddr is a generic struct for several addr types
-	// and lacks struct members like sin_port and sin_family.
-	// this means we need to use the ipv4 struct (sockaddr_in) and cast it to
-	// sockaddr, it tells the compiler to treat the memmory address of sockaddr_in
-	// struct as if it points to sockaddr.
 	int err = connect(SOCK_FileDiscriptor, (struct sockaddr *)&address, sizeof(address));
 	if(err == -1){
 		err_screen(NULL, NULL,"Error connecting to file discriptor\n");
 	}else{
 		printf("Connected\n");
 	}
-	// the cast gives the function access to the (sa_family) member of the struct
-	// wich defines its family type (AF_INET) in this case.
-	// the function accepts a generic (sockaddr *) but, interprets it based on the
-	// (sa_family) struct member allowing it to work with different address types.
-
-	// The (sa_family) member identifies the 'address family' for local sockets.
-	// it tells the system how to interpret the rest of the address structure.
-	// When a generic (struct sockaddr *) is passed to the function, the system
-	// reads (sa_family) to determine the correct specific structure type (lise sockaddr_in)
 
 	char message[1024];
 	char buffer[1024];
@@ -92,12 +61,6 @@ int main(void)
 	// remove \n 
 	nickname[strlen(nickname) -1] = '\0';
 
-	/* 
-	The socket file descriptor (FD) is not fixed — it gets the next available integer in 
-	the process's FD table when created (e.g., 3, 4, etc.).
-	So while 0, 1, 2 are reserved for stdin, stdout, stderr, a socket can be assigned 
-	any higher number — or even reuse 0, 1, 2 if they were closed. 
-	*/
 	fd_set fd_bitmap;
 	int sock_fd = SOCK_FileDiscriptor;
 

@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 
 struct tm* 
