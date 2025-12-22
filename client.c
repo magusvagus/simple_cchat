@@ -108,6 +108,10 @@ int main(void)
 	int test = 0;
 
 	while (1) {
+		// refresh boxes
+		box(recv_win, 0,0);
+		box(send_win, 0,0);
+
 		// Redraw prompt and current input
 		mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
 		wrefresh(send_win);
