@@ -151,22 +151,6 @@ int main(void)
 				i++;
 			}
 		}
-
-			//fgets(message, sizeof(message), stdin);
-
-			// TODO fix, and adjust for ncurses
-			// if(!strcmp(message, "/quit\n")) {
-			// 	close(SOCK_FileDiscriptor);
-			// 	break;
-			// }
-
-			// int ERR_send = send(SOCK_FileDiscriptor, message, sizeof(message), 0);
-			// if(ERR_send == -1) {
-			// 	printf("Error, could not send message.\n");
-			// }
-			// message[0] = '\0';
-
-
 			// TODO recv blocks loop, might use select() or change socket flags to not block loop
 			// message recieved
 			//char r_msg[256];
