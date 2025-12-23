@@ -162,6 +162,8 @@ int main(void)
 
 	// TODO: move to seperate function
 	while (1) {
+		// re-enable cursor
+		curs_set(2);
 		// refresh boxes
 		box(recv_win, 0,0);
 		box(send_win, 0,0);
@@ -229,6 +231,7 @@ int main(void)
 			char r_msg[256];
 			int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
 			if (client_quit > 0 && r_msg[0] != '\0') {
+				// turn off curser so it dosent blink when printing
 				curs_set(0);
 				mvwprintw(recv_win, y, 1, "Recieved: %s \n",r_msg);
 				box(recv_win, 0,0);
