@@ -30,24 +30,87 @@ int main(void)
 	char buffer[1024];
 	char nickname[17];
 
+	// ncurses
+	initscr(); // start curses mode
+	// rs - root screan
+	int rs_row;
+	int rs_col;
+	getmaxyx(stdscr,rs_row,rs_col);
+
+	// set login win
+	WINDOW *log_win;
+	log_win = newwin(rs_row, rs_col, 0,0);
+	box(log_win,0,0);
+	refresh();
+	wrefresh(log_win);
+
+	int ch;
+	int i = 0;
+
+	// TODO: move to function
 	// send nickname to server
 	while(1) {
-		printf("Enter nickname: ");
-		fgets(nickname, sizeof(nickname), stdin);
-		if(strlen(nickname) <= 1) {
-			err_screen(NULL,NULL,"Nickname too short (2 - 15 characters.)");
-		}
-		else if (strlen(nickname) > 15) {
-			err_screen(NULL,NULL,"Nickname too long (2 - 15 characters.)");
-		} 
-		else {
-			break;
-		}
-	}
+		// refresh box
+		box(log_win,0,0);
 
-	int ERR_send = send(SOCK_FileDiscriptor, nickname, sizeof(nickname), 0);
-	if(ERR_send == -1) {
-		err_screen(NULL, NULL,"Error, could not send nickname.\n");
+		mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
+		wrefresh(log_win);
+
+		ch = getch();
+
+		if (ch != ERR) {
+			if (ch == '\n' || ch == '\r') {
+				nickname[i] = '\n';
+
+				mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
+				wrefresh(log_win);
+
+				if(strlen(nickname) <= 1) {
+					err_screen(NULL,NULL,"Nickname too short (2 - 15 characters.)");
+					i = 0;
+					memset(nickname, 0, sizeof(nickname));
+					wmove(log_win, 1,1);
+					wclrtoeol(log_win); // clear line to end
+					mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
+					wrefresh(log_win);
+				}
+				else if (strlen(nickname) > 15) {
+					err_screen(NULL,NULL,"Nickname too long (2 - 15 characters.)");
+					i = 0;
+					memset(nickname, 0, sizeof(nickname));
+					wmove(log_win, 1,1);
+					wclrtoeol(log_win); // clear line to end
+					mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
+					wrefresh(log_win);
+				} 
+				else {
+					int ERR_send = send(SOCK_FileDiscriptor, nickname, sizeof(nickname), 0);
+					if(ERR_send == -1) {
+						err_screen(NULL, NULL,"Error, could not send nickname.\n");
+					}
+					break;
+				}
+			}
+			else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
+				if (i > 0) { 
+					i--;
+					nickname[i] = ' ';
+					mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
+					nickname[i] = '\0';
+					wmove(log_win, 1, 1);
+					wrefresh(log_win);
+				}
+				else {
+					i=0;
+				}
+			}
+			else {
+				nickname[i] = ch;
+				wmove(log_win, 1, 1);
+				wrefresh(log_win);
+				i++;
+			}
+		}
 	}
 
 	// remove \n 
@@ -55,15 +118,6 @@ int main(void)
 
 	fd_set fd_bitmap;
 	int sock_fd = SOCK_FileDiscriptor;
-
-	// ncurses
-	initscr(); // start curses mode
-	
-	// rs - root screan
-	int rs_row;
-	int rs_col;
-
-	getmaxyx(stdscr,rs_row,rs_col);
 
 	WINDOW *recv_win;
 	WINDOW *send_win;
@@ -85,7 +139,7 @@ int main(void)
 	mvwprintw(recv_win, 0, 1, "Chatroom");
 	wrefresh(recv_win);
 
-	int ch;
+	//int ch;
 	int pos = 0;
 
 	cbreak();
@@ -94,11 +148,12 @@ int main(void)
 	noecho();
 	keypad(stdscr, TRUE);
 
-	int i = 0;
+	i = 0;
 	int c = 1;
 
 	int test = 0;
 
+	// TODO: move to seperate function
 	while (1) {
 		// refresh boxes
 		box(recv_win, 0,0);
