@@ -116,6 +116,8 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		printf("%02d:%02d:%02d %s: %s",
 				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, buffer);
 
+		send(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
+
 		// reset buffer
 		buffer[0] = '\0';
 	}   

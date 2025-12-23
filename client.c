@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <sys/select.h>
 #include <ncurses.h>
+#include <fcntl.h>
+#include <errno.h>
 #include "utils.h"
 #include "sockets.h"
 
@@ -152,6 +154,11 @@ int main(void)
 	int c = 1;
 
 	int test = 0;
+	int y = 1;
+
+	// Set socket to non-blocking
+	int flags = fcntl(SOCK_FileDiscriptor, F_GETFL, 0);
+	fcntl(SOCK_FileDiscriptor, F_SETFL, flags | O_NONBLOCK);
 
 	// TODO: move to seperate function
 	while (1) {
@@ -180,6 +187,7 @@ int main(void)
 					close(SOCK_FileDiscriptor);
 					break;
 				}
+				// if message is just enter, do nothing
 				else if ( message[0] == '\n') {
 					continue;
 				}
@@ -199,6 +207,8 @@ int main(void)
 				wrefresh(send_win);
 			}
 			else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
+				// reprint, removing character and set to null
+				// otherwise user can send deleted string as sequence of empty spaces
 				if (i > 0) {
 					i--;
 					message[i] = ' ';
@@ -216,20 +226,33 @@ int main(void)
 				i++;
 			}
 		}
-			// TODO recv blocks loop, might use select() or change socket flags to not block loop
-			// message recieved
-			//char r_msg[256];
-			char r_msg[] = "test message";
-			//int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
-			mvwprintw(recv_win, 1, 1, "Recieved: %s %d\n",r_msg, c);
-			c++;
-			wrefresh(recv_win);
+			char r_msg[256];
+			int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
+			if (client_quit > 0 && r_msg[0] != '\0') {
+				curs_set(0);
+				mvwprintw(recv_win, y, 1, "Recieved: %s \n",r_msg);
+				box(recv_win, 0,0);
+				wrefresh(recv_win);
+				y++;
+				r_msg[0] = '\0';
+			} 
+			else if (client_quit == 0) {
+				err_screen(NULL,NULL,"Server closed connection");
+				break;
 
-			//printf("Recieved: %s\n",r_msg);
-			r_msg[0] = '\0';
-
+			}
+			else {
+				if (errno == EAGAIN || errno == EWOULDBLOCK) {
+					// No data now — continue looping
+					continue;
+				} 
+				else {
+					// Real error
+					err_screen(NULL,NULL,"Error sending message to server");
+					break;
+				}
+			}
 			usleep(10000);
-
 	}
 
 	endwin(); // end curses mode

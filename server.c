@@ -51,14 +51,6 @@ int main(void)
 
 		pthread_t t1;
 		pthread_create(&t1, NULL, wrapper_listen_print, sock_client_list );
-
-		// send 10 msg's for testing
-		for (int i = 0; i < 10; i++) {
-			char hello[100];
-			snprintf(hello, sizeof(hello), "Test message from server no: %d", i);
-			send(sock_client_list->fileDiscriptor, hello, sizeof(hello), 0);
-			sleep(2);
-		}
 	}
 
 	// close all sockets
