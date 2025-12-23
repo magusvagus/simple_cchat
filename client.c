@@ -180,6 +180,9 @@ int main(void)
 					close(SOCK_FileDiscriptor);
 					break;
 				}
+				else if ( message[0] == '\n') {
+					continue;
+				}
 
 				// TODO instead of sending raw text buffer, an type struct should be only send/ recieved
 				// so one recv/send function can parse multiple types of signals/ requests
