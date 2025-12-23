@@ -196,8 +196,15 @@ int main(void)
 				wrefresh(send_win);
 			}
 			else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
-				i--;
-				message[i] = ' ';
+				if (i > 0) {
+					i--;
+					message[i] = ' ';
+					mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
+					message[i] = '\0';
+				}
+				else {
+					i=0;
+				}
 			}
 			else {
 				message[i] = ch;
