@@ -123,23 +123,31 @@ int main(void)
 
 	WINDOW *recv_win;
 	WINDOW *send_win;
+	WINDOW *sub_recv_win;
 
 	recv_win = newwin( rs_row - 4, rs_col, 0, 0);
 	send_win = newwin(4, rs_col, rs_row - 4, 0);
+	// create subwindow inside send_win
+	sub_recv_win = derwin(recv_win, rs_row-6, rs_col-2, 1, 1);
 
 	box(recv_win, 0,0);
 	box(send_win, 0,0);
 	
+	// enable scrolling
+	scrollok(sub_recv_win, TRUE);
 
 	// disable cursor
 	curs_set(0);
 
+	// TODO: might not be needed for all
 	nodelay(send_win, TRUE);
 	nodelay(recv_win, TRUE);
+	nodelay(sub_recv_win, TRUE);
 
 	refresh();
 	wrefresh(send_win);
 	wrefresh(recv_win);
+	wrefresh(sub_recv_win);
 	
 
 	//int ch;
@@ -167,11 +175,14 @@ int main(void)
 	// TODO: move to seperate function
 	while (1) {
 		// refresh boxes
-		box(recv_win, 0,0);
-		box(send_win, 0,0);
+		touchwin(stdscr);
+		touchwin(send_win);
+		touchwin(recv_win);
+		// box(recv_win, 0,0);
+		// box(send_win, 0,0);
 
 		// draw window title
-		mvwprintw(recv_win, 0, 1, "Chatroom");
+		//mvwprintw(recv_win, 0, 1, "Chatroom");
 		wrefresh(recv_win);
 
 		// Redraw prompt and current input
@@ -184,7 +195,7 @@ int main(void)
 			test = 1;
 		}
 
-		ch = getch();
+		ch = wgetch(recv_win);
 
 		if (ch != ERR) {
 			if (ch == '\n' || ch == '\r') {
@@ -237,11 +248,11 @@ int main(void)
 			char r_msg[256];
 			int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
 			if (client_quit > 0 && r_msg[0] != '\0') {
-				//wprintw(recv_win, "Recieved: %s \n",r_msg);
-				mvwprintw(recv_win, y, 1, "%s: %s\n", nickname, r_msg);
-				box(recv_win, 0,0);
+				wprintw(sub_recv_win, "Recieved: %s",r_msg);
+				//mvwprintw(recv_win, y, 1, "%s: %s\n", nickname, r_msg);
+				touchwin(recv_win);
 				// redraw title
-				mvwprintw(recv_win, 0, 1, "Chatroom");
+				//mvwprintw(recv_win, 0, 1, "Chatroom");
 				wrefresh(recv_win);
 				y++;
 				r_msg[0] = '\0';
