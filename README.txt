@@ -1,16 +1,16 @@
 
-Simple C Chat
+Simple C-Chat
 
-A project for learning more about network programming in C.
+A learning project, to learn more about network and socket programming in C.
+
 Current features consist of minimal server allowing for multiple
 client connections.
 
-Under construction: currently rewriting
+Implemented features:
+	- Basic Ncurses TUI
+	- Basic chat capabilities
 
 Planned features:
 	- LibreSSL end to end encoding
-	- Ncurses TUI
 	- Private messages via seperated buffer
-	- mutexes
-	- arena
 	- Arena
