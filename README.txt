@@ -1,5 +1,5 @@
 
-Simple C-Chat
+#Simple C-Chat
 
 A learning project, to learn more about network and socket programming in C.
 
