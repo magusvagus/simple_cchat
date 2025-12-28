@@ -49,6 +49,7 @@ int main(void)
 	int ch;
 	int i = 0;
 
+	// TODO: create pseudo login screen
 	// TODO: move to function
 	// send nickname to server
 	while(1) {

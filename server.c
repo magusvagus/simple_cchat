@@ -31,6 +31,7 @@ int main(void)
 		printf("Error listening on port: %d.\n" ,port);
 	}
 
+	// TODO: split could be a better option for server comms
 	// main loop thread
 	//wrapper_main_loop(&serv_file_discriptor);
 	fd_set read_fds;
@@ -52,6 +53,8 @@ int main(void)
 		pthread_t t1;
 		pthread_create(&t1, NULL, wrapper_listen_print, sock_client_list );
 	}
+
+	// TODO: add socket list manipulation/ options here
 
 	// close all sockets
 	//close(acceptedSocket->fileDiscriptor);
