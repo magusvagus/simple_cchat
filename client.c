@@ -37,11 +37,14 @@ int main(void)
 	// rs - root screan
 	int rs_row;
 	int rs_col;
+	int log_winy = 10;
+	int log_winx = 20;
 	getmaxyx(stdscr,rs_row,rs_col);
 
 	// set login win
 	WINDOW *log_win;
-	log_win = newwin(rs_row, rs_col, 0,0);
+	// TODO: rename each argument for newwin
+	log_win = newwin(log_winy, rs_col/2+log_winx/2, rs_row/2-log_winy/2, rs_col/2-log_winx);
 	box(log_win,0,0);
 	refresh();
 	wrefresh(log_win);
@@ -176,7 +179,6 @@ int main(void)
 	fcntl(SOCK_FileDiscriptor, F_SETFL, flags | O_NONBLOCK);
 
 	// TODO: move to seperate function
-	// nickname/login window
 	while (1) {
 		// refresh boxes
 		touchwin(stdscr);
