@@ -147,9 +147,11 @@ int main(void)
 
 	refresh();
 	wrefresh(send_win);
-	wrefresh(recv_win);
 	wrefresh(sub_recv_win);
 	
+	// draw window title
+	mvwprintw(recv_win, 0, 1, "Chatroom");
+	wrefresh(recv_win);
 
 	//int ch;
 	int pos = 0;
@@ -174,17 +176,13 @@ int main(void)
 	fcntl(SOCK_FileDiscriptor, F_SETFL, flags | O_NONBLOCK);
 
 	// TODO: move to seperate function
+	// nickname/login window
 	while (1) {
 		// refresh boxes
 		touchwin(stdscr);
 		touchwin(send_win);
 		touchwin(recv_win);
-		// box(recv_win, 0,0);
-		// box(send_win, 0,0);
 
-		// draw window title
-		//mvwprintw(recv_win, 0, 1, "Chatroom");
-		wrefresh(recv_win);
 
 		// Redraw prompt and current input
 		mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
