@@ -249,6 +249,7 @@ int main(void)
 			char r_msg[256];
 			int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
 			if (client_quit > 0 && r_msg[0] != '\0') {
+				// TODO: add timestamp and nick of sender
 				wprintw(sub_recv_win, "Recieved: %s",r_msg);
 				//mvwprintw(recv_win, y, 1, "%s: %s\n", nickname, r_msg);
 				touchwin(recv_win);
