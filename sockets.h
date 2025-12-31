@@ -28,6 +28,12 @@ struct AcceptedSocket {
 	struct AcceptedSocket *user_list;
 };
 
+struct Signal {
+	int type;
+	char message;
+	char nickname;
+};
+
 struct Serv_options {
 	int quit_forcefully;
 	int quit_gracefully;
