@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SIG_MSG   1
+#define SIG_QUIT  2
+#define SIG_NICK  3
 
 struct AcceptedSocket {
 	int fileDiscriptor;
