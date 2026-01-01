@@ -112,6 +112,9 @@ win_input(char *title, int winy, int winx)
 	main_win = newwin( rs_row - 4, rs_col, 0, 0);
 	sub_win = derwin(main_win, rs_row-6, rs_col-2, 1, 1);
 
+	// enable scrolling
+	scrollok(sub_win, TRUE);
+
 	struct Win_nested *wn;
 	wn = calloc(1, sizeof(struct Win_nested));
 
@@ -119,6 +122,7 @@ win_input(char *title, int winy, int winx)
 	wn->sub = sub_win;
 
 	box(main_win,0,0);
+
 
 	// print window title
 	if (title != NULL) {
