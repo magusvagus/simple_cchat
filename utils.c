@@ -99,18 +99,28 @@ win_nested(char *title, int winy, int winx)
 	int rs_row;
 	int rs_col;
 
-	// values set for testing
-	winy = 10;
-	winx = 20;
-	getmaxyx(stdscr,rs_row,rs_col);
+	int draw_pty;
+	int draw_ptx;
 
+	getmaxyx(stdscr,rs_row,rs_col);
+	
 	// calloc both windows/ or struct
 	WINDOW *main_win;
 	WINDOW *sub_win;
 
-	// create sub window
-	main_win = newwin( rs_row - 4, rs_col, 0, 0);
-	sub_win = derwin(main_win, rs_row-6, rs_col-2, 1, 1);
+	if (winy != 0 && winx != 0) {
+		// set draw point of window
+		draw_pty = rs_row/2-winy/2;
+		draw_ptx = rs_col/2-winx/2;
+	}
+	else {
+		draw_pty = 0;
+		draw_ptx = 0;
+	}
+
+	// create window w/ sub window
+	main_win  = newwin(winy, winx, draw_pty, draw_ptx);
+	sub_win = derwin(main_win, winy-2, winx-2, 1, 1);
 
 	// enable scrolling
 	scrollok(sub_win, TRUE);
