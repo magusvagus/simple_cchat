@@ -93,7 +93,7 @@ err_screen( WINDOW *p_window, char *win_title, char *err_msg)
 }
 
 struct Win_nested*
-win_input(char *title, int winy, int winx) 
+win_nested(char *title, int winy, int winx) 
 {
 	// rs - root screen
 	int rs_row;
