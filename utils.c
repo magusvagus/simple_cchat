@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 
 struct tm* 
@@ -89,4 +90,40 @@ err_screen( WINDOW *p_window, char *win_title, char *err_msg)
 	wclear(p_pop_win);
 	wrefresh(p_pop_win);
 	delwin(p_pop_win);
+}
+
+struct Win_nested*
+win_input(char *title, int winy, int winx) 
+{
+	// rs - root screen
+	int rs_row;
+	int rs_col;
+
+	// values set for testing
+	winy = 10;
+	winx = 20;
+	getmaxyx(stdscr,rs_row,rs_col);
+
+	// calloc both windows/ or struct
+	WINDOW *main_win;
+	WINDOW *sub_win;
+
+	// create sub window
+	main_win = newwin( rs_row - 4, rs_col, 0, 0);
+	sub_win = derwin(main_win, rs_row-6, rs_col-2, 1, 1);
+
+	struct Win_nested *wn;
+	wn = calloc(1, sizeof(struct Win_nested));
+
+	wn->main = main_win;
+	wn->sub = sub_win;
+
+	box(main_win,0,0);
+
+	// print window title
+	if (title != NULL) {
+		mvwprintw(main_win,0,1, "%s", title);
+	}
+
+	return wn;
 }
