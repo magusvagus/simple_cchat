@@ -124,36 +124,40 @@ int main(void)
 	fd_set fd_bitmap;
 	int sock_fd = SOCK_FileDiscriptor;
 
-	WINDOW *recv_win;
 	WINDOW *send_win;
-	WINDOW *sub_recv_win;
+	// WINDOW *recv_win;
+	// WINDOW *sub_recv_win;
 
-	recv_win = newwin( rs_row - 4, rs_col, 0, 0);
 	send_win = newwin(4, rs_col, rs_row - 4, 0);
+	// recv_win = newwin( rs_row - 4, rs_col, 0, 0);
 	// create subwindow inside send_win
-	sub_recv_win = derwin(recv_win, rs_row-6, rs_col-2, 1, 1);
+	// sub_recv_win = derwin(recv_win, rs_row-6, rs_col-2, 1, 1);
 
-	box(recv_win, 0,0);
+	struct Win_nested *wn = NULL;
+	wn = win_nested("Chatroom", rs_row-7, rs_col);
+
+	//box(recv_win, 0,0);
 	box(send_win, 0,0);
 	
 	// enable scrolling
-	scrollok(sub_recv_win, TRUE);
+	//scrollok(sub_recv_win, TRUE);
 
 	// disable cursor
 	curs_set(0);
 
 	// TODO: might not be needed for all
 	nodelay(send_win, TRUE);
-	nodelay(recv_win, TRUE);
-	nodelay(sub_recv_win, TRUE);
+	nodelay(wn->main, TRUE);
+	nodelay(wn->sub, TRUE);
+	//nodelay(sub_recv_win, TRUE);
 
 	refresh();
 	wrefresh(send_win);
-	wrefresh(sub_recv_win);
+	wrefresh(wn->sub);
 	
 	// draw window title
-	mvwprintw(recv_win, 0, 1, "Chatroom");
-	wrefresh(recv_win);
+	//mvwprintw(recv_win, 0, 1, "Chatroom");
+	//wrefresh(recv_win);
 
 	//int ch;
 	int pos = 0;
@@ -182,7 +186,7 @@ int main(void)
 		// refresh boxes
 		touchwin(stdscr);
 		touchwin(send_win);
-		touchwin(recv_win);
+		touchwin(wn->main);
 
 
 		// Redraw prompt and current input
@@ -195,7 +199,7 @@ int main(void)
 			test = 1;
 		}
 
-		ch = wgetch(recv_win);
+		ch = wgetch(wn->main);
 
 		if (ch != ERR) {
 			if (ch == '\n' || ch == '\r') {
@@ -249,12 +253,12 @@ int main(void)
 			int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
 			if (client_quit > 0 && r_msg[0] != '\0') {
 				// TODO: add timestamp and nick of sender
-				wprintw(sub_recv_win, "Recieved: %s",r_msg);
+				wprintw(wn->sub, "Recieved: %s",r_msg);
 				//mvwprintw(recv_win, y, 1, "%s: %s\n", nickname, r_msg);
-				touchwin(recv_win);
+				touchwin(wn->main);
 				// redraw title
 				//mvwprintw(recv_win, 0, 1, "Chatroom");
-				wrefresh(recv_win);
+				wrefresh(wn->main);
 				y++;
 				r_msg[0] = '\0';
 			} 
