@@ -93,7 +93,7 @@ err_screen( WINDOW *p_window, char *win_title, char *err_msg)
 }
 
 struct Win_nested*
-win_nested(char *title, int winy, int winx) 
+win_nested(char *title, int winy, int winx, int wfl) 
 {
 	// rs - root screen
 	int rs_row;
@@ -108,17 +108,16 @@ win_nested(char *title, int winy, int winx)
 	WINDOW *main_win;
 	WINDOW *sub_win;
 
-	// if (winy != 0 && winx != 0) {
-	// 	// set draw point of window
-	// 	draw_pty = rs_row/2-winy/2;
-	// 	draw_ptx = rs_col/2-winx/2;
-	// }
-	// else {
-	// 	draw_pty = 0;
-	// 	draw_ptx = 0;
-	// }
-	draw_pty = 0;
-	draw_ptx = 0;
+	//floating window option
+	if (wfl == 1) {
+		// set draw point of window
+		draw_pty = rs_row/2-winy/2;
+		draw_ptx = rs_col/2-winx/2;
+	}
+	else {
+		draw_pty = 0;
+		draw_ptx = 0;
+	}
 
 	// create window w/ sub window
 	main_win  = newwin(winy, winx, draw_pty, draw_ptx);
