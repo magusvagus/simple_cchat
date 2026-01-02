@@ -125,22 +125,12 @@ int main(void)
 	int sock_fd = SOCK_FileDiscriptor;
 
 	WINDOW *send_win;
-	// WINDOW *recv_win;
-	// WINDOW *sub_recv_win;
-
 	send_win = newwin(4, rs_col, rs_row - 4, 0);
-	// recv_win = newwin( rs_row - 4, rs_col, 0, 0);
-	// create subwindow inside send_win
-	// sub_recv_win = derwin(recv_win, rs_row-6, rs_col-2, 1, 1);
+	box(send_win, 0,0);
 
+	// create win+sub_window
 	struct Win_nested *wn = NULL;
 	wn = win_nested("Chatroom", rs_row-4, rs_col, 0);
-
-	//box(recv_win, 0,0);
-	box(send_win, 0,0);
-	
-	// enable scrolling
-	//scrollok(sub_recv_win, TRUE);
 
 	// disable cursor
 	curs_set(0);
@@ -149,15 +139,10 @@ int main(void)
 	nodelay(send_win, TRUE);
 	nodelay(wn->main, TRUE);
 	nodelay(wn->sub, TRUE);
-	//nodelay(sub_recv_win, TRUE);
 
 	refresh();
 	wrefresh(send_win);
 	wrefresh(wn->sub);
-	
-	// draw window title
-	//mvwprintw(recv_win, 0, 1, "Chatroom");
-	//wrefresh(recv_win);
 
 	//int ch;
 	int pos = 0;
