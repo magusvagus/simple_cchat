@@ -134,7 +134,7 @@ int main(void)
 	// sub_recv_win = derwin(recv_win, rs_row-6, rs_col-2, 1, 1);
 
 	struct Win_nested *wn = NULL;
-	wn = win_nested("Chatroom", rs_row-7, rs_col);
+	wn = win_nested("Chatroom", rs_row-4, rs_col);
 
 	//box(recv_win, 0,0);
 	box(send_win, 0,0);

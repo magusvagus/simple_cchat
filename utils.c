@@ -108,15 +108,17 @@ win_nested(char *title, int winy, int winx)
 	WINDOW *main_win;
 	WINDOW *sub_win;
 
-	if (winy != 0 && winx != 0) {
-		// set draw point of window
-		draw_pty = rs_row/2-winy/2;
-		draw_ptx = rs_col/2-winx/2;
-	}
-	else {
-		draw_pty = 0;
-		draw_ptx = 0;
-	}
+	// if (winy != 0 && winx != 0) {
+	// 	// set draw point of window
+	// 	draw_pty = rs_row/2-winy/2;
+	// 	draw_ptx = rs_col/2-winx/2;
+	// }
+	// else {
+	// 	draw_pty = 0;
+	// 	draw_ptx = 0;
+	// }
+	draw_pty = 0;
+	draw_ptx = 0;
 
 	// create window w/ sub window
 	main_win  = newwin(winy, winx, draw_pty, draw_ptx);
