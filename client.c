@@ -128,6 +128,7 @@ int main(void)
 	send_win = newwin(4, rs_col, rs_row - 4, 0);
 	box(send_win, 0,0);
 
+	// TODO: change name to something more readable
 	// create win+sub_window
 	struct Win_nested *wn = NULL;
 	wn = win_nested("Chatroom", rs_row-4, rs_col, 0);
