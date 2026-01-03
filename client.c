@@ -41,6 +41,7 @@ int main(void)
 	int log_winx = 20;
 	getmaxyx(stdscr,rs_row,rs_col);
 
+	// TODO: change to nested window
 	// set login win
 	WINDOW *log_win;
 	// TODO: rename each argument for newwin
