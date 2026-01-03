@@ -128,22 +128,21 @@ int main(void)
 	send_win = newwin(4, rs_col, rs_row - 4, 0);
 	box(send_win, 0,0);
 
-	// TODO: change name to something more readable
 	// create win+sub_window
-	struct Win_nested *wn = NULL;
-	wn = win_nested("Chatroom", rs_row-4, rs_col, 0);
+	struct Win_nested *recv_win = NULL;
+	recv_win = win_nested("Chatroom", rs_row-4, rs_col, 0);
 
 	// disable cursor
 	curs_set(0);
 
 	// TODO: might not be needed for all
 	nodelay(send_win, TRUE);
-	nodelay(wn->main, TRUE);
-	nodelay(wn->sub, TRUE);
+	nodelay(recv_win->main, TRUE);
+	nodelay(recv_win->sub, TRUE);
 
 	refresh();
 	wrefresh(send_win);
-	wrefresh(wn->sub);
+	wrefresh(recv_win->sub);
 
 	//int ch;
 	int pos = 0;
@@ -172,7 +171,7 @@ int main(void)
 		// refresh boxes
 		touchwin(stdscr);
 		touchwin(send_win);
-		touchwin(wn->main);
+		touchwin(recv_win->main);
 
 
 		// Redraw prompt and current input
@@ -185,7 +184,7 @@ int main(void)
 			test = 1;
 		}
 
-		ch = wgetch(wn->main);
+		ch = wgetch(recv_win->main);
 
 		if (ch != ERR) {
 			if (ch == '\n' || ch == '\r') {
@@ -239,12 +238,12 @@ int main(void)
 			int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
 			if (client_quit > 0 && r_msg[0] != '\0') {
 				// TODO: add timestamp and nick of sender
-				wprintw(wn->sub, "Recieved: %s",r_msg);
+				wprintw(recv_win->sub, "Recieved: %s",r_msg);
 				//mvwprintw(recv_win, y, 1, "%s: %s\n", nickname, r_msg);
-				touchwin(wn->main);
+				touchwin(recv_win->main);
 				// redraw title
 				//mvwprintw(recv_win, 0, 1, "Chatroom");
-				wrefresh(wn->main);
+				wrefresh(recv_win->main);
 				y++;
 				r_msg[0] = '\0';
 			} 
