@@ -41,12 +41,7 @@ int main(void)
 	int log_winx = 20;
 	getmaxyx(stdscr,rs_row,rs_col);
 
-	// TODO: change to nested window
-	// set login win
-	// TODO: rename each argument for newwin
-	//log_win = newwin(log_winy, rs_col/2+log_winx/2, rs_row/2-log_winy/2, rs_col/2-log_winx);
-	//box(log_win,0,0);
-
+	// TODO: rename each argument log_win, to make it more readable
 	struct Win_nested *log_win = NULL;
 	log_win = win_nested(0, log_winy, rs_col/2+log_winx/2, 1);
 
