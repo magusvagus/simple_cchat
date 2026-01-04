@@ -238,10 +238,7 @@ int main(void)
 			if (client_quit > 0 && r_msg[0] != '\0') {
 				// TODO: add timestamp and nick of sender
 				wprintw(recv_win->sub, "Recieved: %s",r_msg);
-				//mvwprintw(recv_win, y, 1, "%s: %s\n", nickname, r_msg);
 				touchwin(recv_win->main);
-				// redraw title
-				//mvwprintw(recv_win, 0, 1, "Chatroom");
 				wrefresh(recv_win->main);
 				y++;
 				r_msg[0] = '\0';
