@@ -43,12 +43,15 @@ int main(void)
 
 	// TODO: change to nested window
 	// set login win
-	WINDOW *log_win;
 	// TODO: rename each argument for newwin
-	log_win = newwin(log_winy, rs_col/2+log_winx/2, rs_row/2-log_winy/2, rs_col/2-log_winx);
-	box(log_win,0,0);
+	//log_win = newwin(log_winy, rs_col/2+log_winx/2, rs_row/2-log_winy/2, rs_col/2-log_winx);
+	//box(log_win,0,0);
+
+	struct Win_nested *log_win = NULL;
+	log_win = win_nested(nickname, log_winy, rs_col/2+log_winx/2, 1);
+
 	refresh();
-	wrefresh(log_win);
+	wrefresh(log_win->sub);
 
 	int ch;
 	int i = 0;
@@ -57,10 +60,10 @@ int main(void)
 	// send nickname to server
 	while(1) {
 		// refresh box
-		box(log_win,0,0);
+		box(log_win->sub,0,0);
 
-		mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
-		wrefresh(log_win);
+		mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
+		wrefresh(log_win->sub);
 
 		ch = getch();
 
@@ -68,26 +71,26 @@ int main(void)
 			if (ch == '\n' || ch == '\r') {
 				nickname[i] = '\n';
 
-				mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
-				wrefresh(log_win);
+				mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
+				wrefresh(log_win->sub);
 
 				if(strlen(nickname) <= 1) {
 					err_screen(NULL,NULL,"Nickname too short (2 - 15 characters.)");
 					i = 0;
 					memset(nickname, 0, sizeof(nickname));
-					wmove(log_win, 1,1);
-					wclrtoeol(log_win); // clear line to end
-					mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
-					wrefresh(log_win);
+					wmove(log_win->sub, 1,1);
+					wclrtoeol(log_win->sub); // clear line to end
+					mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
+					wrefresh(log_win->sub);
 				}
 				else if (strlen(nickname) > 15) {
 					err_screen(NULL,NULL,"Nickname too long (2 - 15 characters.)");
 					i = 0;
 					memset(nickname, 0, sizeof(nickname));
-					wmove(log_win, 1,1);
-					wclrtoeol(log_win); // clear line to end
-					mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
-					wrefresh(log_win);
+					wmove(log_win->sub, 1,1);
+					wclrtoeol(log_win->sub); // clear line to end
+					mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
+					wrefresh(log_win->sub);
 				} 
 				else {
 					int ERR_send = send(SOCK_FileDiscriptor, nickname, sizeof(nickname), 0);
@@ -101,10 +104,10 @@ int main(void)
 				if (i > 0) { 
 					i--;
 					nickname[i] = ' ';
-					mvwprintw(log_win, 1, 1, "Nickname: %s", nickname);
+					mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
 					nickname[i] = '\0';
-					wmove(log_win, 1, 1);
-					wrefresh(log_win);
+					wmove(log_win->sub, 1, 1);
+					wrefresh(log_win->sub);
 				}
 				else {
 					i=0;
@@ -112,8 +115,8 @@ int main(void)
 			}
 			else {
 				nickname[i] = ch;
-				wmove(log_win, 1, 1);
-				wrefresh(log_win);
+				wmove(log_win->sub, 1, 1);
+				wrefresh(log_win->sub);
 				i++;
 			}
 		}
