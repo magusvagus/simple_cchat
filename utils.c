@@ -95,7 +95,8 @@ err_screen( WINDOW *p_window, char *win_title, char *err_msg)
 struct Win_nested*
 win_nested(char *title, int winy, int winx, int wfl) 
 {
-
+	// disable echoing of keyboard shortcuts
+	noecho();
 
 	// rs - root screen
 	int rs_row;
