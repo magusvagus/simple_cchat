@@ -58,7 +58,8 @@ int main(void)
 		mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
 		wrefresh(log_win->sub);
 
-		ch = getch();
+		//ch = getch();
+		ch = wgetch(log_win->sub);
 
 		if (ch != ERR) {
 			if (ch == '\n' || ch == '\r') {
@@ -99,9 +100,10 @@ int main(void)
 				if (i > 0) { 
 					i--;
 					nickname[i] = ' ';
+					wclrtoeol(log_win->sub);
 					mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
 					nickname[i] = '\0';
-					wmove(log_win->sub, 1, 1);
+					//wmove(log_win->sub, 1, 1);
 					wrefresh(log_win->sub);
 				}
 				else {
@@ -171,7 +173,6 @@ int main(void)
 		touchwin(stdscr);
 		touchwin(send_win);
 		touchwin(recv_win->main);
-
 
 		// Redraw prompt and current input
 		mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
