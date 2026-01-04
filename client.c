@@ -38,12 +38,11 @@ int main(void)
 	int rs_row;
 	int rs_col;
 	int log_winy = 10;
-	int log_winx = 20;
+	int log_winx = 40;
 	getmaxyx(stdscr,rs_row,rs_col);
 
-	// TODO: rename each argument log_win, to make it more readable
 	struct Win_nested *log_win = NULL;
-	log_win = win_nested(0, log_winy, rs_col/2+log_winx/2, 1);
+	log_win = win_nested(0, log_winy, log_winx, 1);
 
 	refresh();
 	wrefresh(log_win->main);
