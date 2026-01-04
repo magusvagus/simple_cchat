@@ -124,6 +124,7 @@ int main(void)
 	fd_set fd_bitmap;
 	int sock_fd = SOCK_FileDiscriptor;
 
+	// TODO: change to nested window
 	WINDOW *send_win;
 	send_win = newwin(4, rs_col, rs_row - 4, 0);
 	box(send_win, 0,0);
@@ -144,7 +145,6 @@ int main(void)
 	wrefresh(send_win);
 	wrefresh(recv_win->sub);
 
-	//int ch;
 	int pos = 0;
 
 	// disable cursor
