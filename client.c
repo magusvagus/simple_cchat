@@ -48,10 +48,10 @@ int main(void)
 	//box(log_win,0,0);
 
 	struct Win_nested *log_win = NULL;
-	log_win = win_nested(nickname, log_winy, rs_col/2+log_winx/2, 1);
+	log_win = win_nested(0, log_winy, rs_col/2+log_winx/2, 1);
 
 	refresh();
-	wrefresh(log_win->sub);
+	wrefresh(log_win->main);
 
 	int ch;
 	int i = 0;
@@ -59,8 +59,7 @@ int main(void)
 	// TODO: move to function
 	// send nickname to server
 	while(1) {
-		// refresh box
-		box(log_win->sub,0,0);
+		touchwin(log_win->main);
 
 		mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
 		wrefresh(log_win->sub);
@@ -82,6 +81,7 @@ int main(void)
 					wclrtoeol(log_win->sub); // clear line to end
 					mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
 					wrefresh(log_win->sub);
+					wrefresh(log_win->main);
 				}
 				else if (strlen(nickname) > 15) {
 					err_screen(NULL,NULL,"Nickname too long (2 - 15 characters.)");
@@ -91,6 +91,7 @@ int main(void)
 					wclrtoeol(log_win->sub); // clear line to end
 					mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
 					wrefresh(log_win->sub);
+					wrefresh(log_win->main);
 				} 
 				else {
 					int ERR_send = send(SOCK_FileDiscriptor, nickname, sizeof(nickname), 0);
