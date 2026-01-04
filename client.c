@@ -68,7 +68,7 @@ int main(void)
 				mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
 				wrefresh(log_win->sub);
 
-				if(strlen(nickname) <= 1) {
+				if(strlen(nickname) < 3) {
 					err_screen(NULL,NULL,"Nickname too short (2 - 15 characters.)");
 					i = 0;
 					memset(nickname, 0, sizeof(nickname));
