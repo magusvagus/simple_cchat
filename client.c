@@ -264,6 +264,7 @@ int main(void)
 	}
 
 	endwin(); // end curses mode
+	// deallocate heap mem
 	free(send_win);
 	close(SOCK_FileDiscriptor);
 	return 0;
