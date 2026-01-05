@@ -2,6 +2,7 @@ test
 server.o
 client.o
 sockets.o
+utils.o
 cli
 serv
 client.c.bak.with.explanation
