@@ -234,39 +234,41 @@ int main(void)
 				i++;
 			}
 		}
-			char r_msg[256];
-			int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
-			if (client_quit > 0 && r_msg[0] != '\0') {
-				// TODO: add timestamp and nick of sender
-				wprintw(recv_win->sub, "Recieved: %s",r_msg);
-				touchwin(recv_win->main);
-				wrefresh(recv_win->main);
-				y++;
-				r_msg[0] = '\0';
-			} 
-			else if (client_quit == 0) {
-				err_screen(NULL,NULL,"Server closed connection");
-				break;
 
-			}
+		char r_msg[256];
+		int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
+		if (client_quit > 0 && r_msg[0] != '\0') {
+			// TODO: add timestamp and nick of sender
+			wprintw(recv_win->sub, "Recieved: %s",r_msg);
+			touchwin(recv_win->main);
+			wrefresh(recv_win->main);
+			//y++;
+			r_msg[0] = '\0';
+		} 
+		else if (client_quit == 0) {
+			err_screen(NULL,NULL,"Server closed connection");
+			break;
+
+		}
+		else {
+			if (errno == EAGAIN || errno == EWOULDBLOCK) {
+				// No data now — continue looping
+				continue;
+			} 
 			else {
-				if (errno == EAGAIN || errno == EWOULDBLOCK) {
-					// No data now — continue looping
-					continue;
-				} 
-				else {
-					// Real error
-					err_screen(NULL,NULL,"Error sending message to server");
-					break;
-				}
+				// Real error
+				err_screen(NULL,NULL,"Error sending message to server");
+				break;
 			}
-			usleep(10000);
+		}
+		usleep(10000);
 	}
 
 	endwin(); // end curses mode
 	// deallocate heap mem
 	free(send_win);
 	free(log_win);
+
 	close(SOCK_FileDiscriptor);
 	return 0;
 }
