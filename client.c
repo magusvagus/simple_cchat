@@ -126,9 +126,11 @@ int main(void)
 	int sock_fd = SOCK_FileDiscriptor;
 
 	// TODO: change to nested window
-	WINDOW *send_win;
-	send_win = newwin(4, rs_col, rs_row - 4, 0);
-	box(send_win, 0,0);
+	//WINDOW *send_win;
+	struct Win_nested *send_win = NULL;
+	send_win = win_nested(nickname, 4, rs_col, rs_row-4, 0, 0);
+	//send_win = newwin(4, rs_col, rs_row - 4, 0);
+	//box(send_win, 0,0);
 
 	// create win+sub_window
 	struct Win_nested *recv_win = NULL;
@@ -138,12 +140,12 @@ int main(void)
 	curs_set(0);
 
 	// TODO: might not be needed for all
-	nodelay(send_win, TRUE);
+	nodelay(send_win->sub, TRUE);
 	nodelay(recv_win->main, TRUE);
 	nodelay(recv_win->sub, TRUE);
 
 	refresh();
-	wrefresh(send_win);
+	wrefresh(send_win->sub);
 	wrefresh(recv_win->sub);
 
 	// disable cursor
@@ -167,12 +169,12 @@ int main(void)
 	while (1) {
 		// refresh boxes
 		touchwin(stdscr);
-		touchwin(send_win);
+		touchwin(send_win->main);
 		touchwin(recv_win->main);
 
 		// Redraw prompt and current input
-		mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
-		wrefresh(send_win);
+		mvwprintw(send_win->sub, 1, 1, "%s: %s", nickname, message);
+		wrefresh(send_win->sub);
 
 		// test error function
 		if (!test) {
@@ -205,10 +207,10 @@ int main(void)
 
 				i = 0;
 				memset(message, 0, sizeof(message));
-				wmove(send_win, 1,1);
-				wclrtoeol(send_win); // clear line to end
-				mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
-				wrefresh(send_win);
+				wmove(send_win->sub, 1,1);
+				wclrtoeol(send_win->sub); // clear line to end
+				mvwprintw(send_win->sub, 1, 1, "%s: %s", nickname, message);
+				wrefresh(send_win->sub);
 			}
 			else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
 				// reprint, removing character and set to null
@@ -216,7 +218,7 @@ int main(void)
 				if (i > 0) {
 					i--;
 					message[i] = ' ';
-					mvwprintw(send_win, 1, 1, "%s: %s", nickname, message);
+					mvwprintw(send_win->sub, 1, 1, "%s: %s", nickname, message);
 					message[i] = '\0';
 				}
 				else {
@@ -225,8 +227,8 @@ int main(void)
 			}
 			else {
 				message[i] = ch;
-				wmove(send_win, 1, 1);
-				wrefresh(send_win);
+				wmove(send_win->sub, 1, 1);
+				wrefresh(send_win->sub);
 				i++;
 			}
 		}

@@ -130,7 +130,6 @@ win_nested(char *title, int winy, int winx, int drawpty, int drawptx, int wfl)
 
 	box(main_win,0,0);
 
-
 	// print window title
 	if (title != NULL) {
 		mvwprintw(main_win,0,1, "%s", title);
