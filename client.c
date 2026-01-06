@@ -175,6 +175,8 @@ int main(void)
 		// Redraw prompt and current input
 		mvwprintw(send_win->sub, 0, 0, "%s: %s", nickname, message);
 		wrefresh(send_win->sub);
+		wrefresh(recv_win->sub);
+		wrefresh(recv_win->main);
 		wrefresh(send_win->main);
 
 		// test error function
@@ -183,7 +185,7 @@ int main(void)
 			test = 1;
 		}
 
-		ch = wgetch(recv_win->main);
+		ch = wgetch(send_win->sub);
 
 		if (ch != ERR) {
 			if (ch == '\n' || ch == '\r') {
