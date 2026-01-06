@@ -144,9 +144,9 @@ int main(void)
 	nodelay(recv_win->main, TRUE);
 	nodelay(recv_win->sub, TRUE);
 
-	refresh();
 	wrefresh(send_win->sub);
 	wrefresh(recv_win->sub);
+	refresh();
 
 	// disable cursor
 	curs_set(0);
@@ -175,6 +175,7 @@ int main(void)
 		// Redraw prompt and current input
 		mvwprintw(send_win->sub, 1, 1, "%s: %s", nickname, message);
 		wrefresh(send_win->sub);
+		wrefresh(send_win->main);
 
 		// test error function
 		if (!test) {
@@ -211,6 +212,7 @@ int main(void)
 				wclrtoeol(send_win->sub); // clear line to end
 				mvwprintw(send_win->sub, 1, 1, "%s: %s", nickname, message);
 				wrefresh(send_win->sub);
+				wrefresh(send_win->main);
 			}
 			else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
 				// reprint, removing character and set to null
@@ -229,6 +231,7 @@ int main(void)
 				message[i] = ch;
 				wmove(send_win->sub, 1, 1);
 				wrefresh(send_win->sub);
+				wrefresh(send_win->main);
 				i++;
 			}
 		}
@@ -240,6 +243,7 @@ int main(void)
 			wprintw(recv_win->sub, "Recieved: %s",r_msg);
 			touchwin(recv_win->main);
 			wrefresh(recv_win->main);
+			wrefresh(send_win->main);
 			r_msg[0] = '\0';
 		} 
 		else if (client_quit == 0) {
