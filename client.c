@@ -42,7 +42,7 @@ int main(void)
 	getmaxyx(stdscr,rs_row,rs_col);
 
 	struct Win_nested *log_win = NULL;
-	log_win = win_nested(0, log_winy, log_winx, 1);
+	log_win = win_nested(0, log_winy, log_winx,0,0, 1);
 
 	refresh();
 	wrefresh(log_win->main);
@@ -132,7 +132,7 @@ int main(void)
 
 	// create win+sub_window
 	struct Win_nested *recv_win = NULL;
-	recv_win = win_nested("Chatroom", rs_row-4, rs_col, 0);
+	recv_win = win_nested("Chatroom", rs_row-4, rs_col,0,0,0);
 
 	// disable cursor
 	curs_set(0);
@@ -146,8 +146,6 @@ int main(void)
 	wrefresh(send_win);
 	wrefresh(recv_win->sub);
 
-	int pos = 0;
-
 	// disable cursor
 	curs_set(0);
 
@@ -158,10 +156,8 @@ int main(void)
 	keypad(stdscr, TRUE);
 
 	i = 0;
-	int c = 1;
 
 	int test = 0;
-	int y = 1;
 
 	// Set socket to non-blocking
 	int flags = fcntl(SOCK_FileDiscriptor, F_GETFL, 0);
@@ -242,7 +238,6 @@ int main(void)
 			wprintw(recv_win->sub, "Recieved: %s",r_msg);
 			touchwin(recv_win->main);
 			wrefresh(recv_win->main);
-			//y++;
 			r_msg[0] = '\0';
 		} 
 		else if (client_quit == 0) {

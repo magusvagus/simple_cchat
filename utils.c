@@ -93,7 +93,7 @@ err_screen( WINDOW *p_window, char *win_title, char *err_msg)
 }
 
 struct Win_nested*
-win_nested(char *title, int winy, int winx, int wfl) 
+win_nested(char *title, int winy, int winx, int drawpty, int drawptx, int wfl) 
 {
 	// disable echoing of keyboard shortcuts
 	noecho();
@@ -101,9 +101,6 @@ win_nested(char *title, int winy, int winx, int wfl)
 	// rs - root screen
 	int rs_row;
 	int rs_col;
-
-	int draw_pty;
-	int draw_ptx;
 
 	getmaxyx(stdscr,rs_row,rs_col);
 	
@@ -114,16 +111,12 @@ win_nested(char *title, int winy, int winx, int wfl)
 	//floating window option
 	if (wfl == 1) {
 		// set draw point of window
-		draw_pty = rs_row/2-winy/2;
-		draw_ptx = rs_col/2-winx/2;
-	}
-	else {
-		draw_pty = 0;
-		draw_ptx = 0;
+		drawpty = rs_row/2-winy/2;
+		drawptx = rs_col/2-winx/2;
 	}
 
 	// create window w/ sub window
-	main_win  = newwin(winy, winx, draw_pty, draw_ptx);
+	main_win  = newwin(winy, winx, drawpty, drawptx);
 	sub_win = derwin(main_win, winy-2, winx-2, 1, 1);
 
 	// enable scrolling
