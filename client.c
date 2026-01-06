@@ -173,7 +173,7 @@ int main(void)
 		touchwin(recv_win->main);
 
 		// Redraw prompt and current input
-		mvwprintw(send_win->sub, 1, 1, "%s: %s", nickname, message);
+		mvwprintw(send_win->sub, 0, 1, "%s: %s", nickname, message);
 		wrefresh(send_win->sub);
 		wrefresh(send_win->main);
 
@@ -208,9 +208,9 @@ int main(void)
 
 				i = 0;
 				memset(message, 0, sizeof(message));
-				wmove(send_win->sub, 1,1);
+				wmove(send_win->sub, 0,1);
 				wclrtoeol(send_win->sub); // clear line to end
-				mvwprintw(send_win->sub, 1, 1, "%s: %s", nickname, message);
+				mvwprintw(send_win->sub, 0, 1, "%s: %s", nickname, message);
 				wrefresh(send_win->sub);
 				wrefresh(send_win->main);
 			}
@@ -220,7 +220,7 @@ int main(void)
 				if (i > 0) {
 					i--;
 					message[i] = ' ';
-					mvwprintw(send_win->sub, 1, 1, "%s: %s", nickname, message);
+					mvwprintw(send_win->sub, 0, 1, "%s: %s", nickname, message);
 					message[i] = '\0';
 				}
 				else {
@@ -229,7 +229,7 @@ int main(void)
 			}
 			else {
 				message[i] = ch;
-				wmove(send_win->sub, 1, 1);
+				wmove(send_win->sub, 0, 1);
 				wrefresh(send_win->sub);
 				wrefresh(send_win->main);
 				i++;
