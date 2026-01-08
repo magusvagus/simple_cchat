@@ -266,6 +266,7 @@ int main(void)
 
 	endwin(); // end curses mode
 	// deallocate heap mem
+	free(recv_win);
 	free(send_win);
 	free(log_win);
 
