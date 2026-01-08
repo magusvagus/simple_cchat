@@ -43,6 +43,11 @@ int main(void)
 
 	struct Win_nested *log_win = NULL;
 	log_win = win_nested(0, log_winy, log_winx,0,0, 1);
+	if (log_win == NULL) {
+		err_screen(NULL, NULL,"Error creating login window\n");
+		return -1;
+	}
+	
 
 	refresh();
 	wrefresh(log_win->main);
@@ -128,10 +133,18 @@ int main(void)
 	// TODO: change to nested window
 	struct Win_nested *send_win = NULL;
 	send_win = win_nested(nickname, 4, rs_col, rs_row-4, 0, 0);
+	if (send_win == NULL) {
+		err_screen(NULL, NULL,"Error creating send window\n");
+		return -1;
+	}
 
 	// create win+sub_window
 	struct Win_nested *recv_win = NULL;
 	recv_win = win_nested("Chatroom", rs_row-4, rs_col,0,0,0);
+	if (send_win == NULL) {
+		err_screen(NULL, NULL,"Error creating recieve window\n");
+		return -1;
+	}
 
 	// disable cursor
 	curs_set(0);
@@ -258,6 +271,7 @@ int main(void)
 	}
 
 	endwin(); // end curses mode
+	
 	// deallocate heap mem
 	if ( recv_win != NULL ) {
 		free(recv_win);
