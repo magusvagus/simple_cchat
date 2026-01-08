@@ -261,7 +261,7 @@ int main(void)
 	// deallocate heap mem
 	free(recv_win);
 	free(send_win);
-	free(log_win);
+	free(log_win); // TODO: maybe better deallocate after nickname was send
 
 	close(SOCK_FileDiscriptor);
 	return 0;
