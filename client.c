@@ -259,9 +259,20 @@ int main(void)
 
 	endwin(); // end curses mode
 	// deallocate heap mem
-	free(recv_win);
-	free(send_win);
-	free(log_win); // TODO: maybe better deallocate after nickname was send
+	if ( recv_win != NULL ) {
+		free(recv_win);
+		recv_win = NULL;
+	}
+
+	if ( send_win != NULL ) {
+		free(send_win);
+		send_win = NULL;
+	}
+
+	if ( log_win != NULL ) {
+		free(log_win); // TODO: maybe better deallocate after nickname was send
+		log_win = NULL;
+	}
 
 	close(SOCK_FileDiscriptor);
 	return 0;
