@@ -126,11 +126,8 @@ int main(void)
 	int sock_fd = SOCK_FileDiscriptor;
 
 	// TODO: change to nested window
-	//WINDOW *send_win;
 	struct Win_nested *send_win = NULL;
 	send_win = win_nested(nickname, 4, rs_col, rs_row-4, 0, 0);
-	//send_win = newwin(4, rs_col, rs_row - 4, 0);
-	//box(send_win, 0,0);
 
 	// create win+sub_window
 	struct Win_nested *recv_win = NULL;
