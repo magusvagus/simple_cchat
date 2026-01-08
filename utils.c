@@ -145,5 +145,4 @@ win_reset(struct Win_nested *wn1, struct Win_nested *wn2)
 	wrefresh(wn1->sub);
 	wrefresh(wn2->main);
 	wrefresh(wn2->sub);
-	refresh();
 }
