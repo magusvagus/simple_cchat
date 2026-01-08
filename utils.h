@@ -3,9 +3,15 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+
 struct Win_nested {
 	WINDOW* main;
 	WINDOW* sub;
+};
+
+struct Chat_ui {
+	struct Win_nested send_win ;
+	struct Win_nested recv_win ;
 };
 
 struct tm* timestamp();
