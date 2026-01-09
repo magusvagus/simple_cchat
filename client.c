@@ -47,7 +47,6 @@ int main(void)
 		err_screen(NULL, NULL,"Error creating login window\n");
 		return -1;
 	}
-	
 
 	refresh();
 	wrefresh(log_win->main);
