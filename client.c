@@ -129,7 +129,6 @@ int main(void)
 	fd_set fd_bitmap;
 	int sock_fd = SOCK_FileDiscriptor;
 
-	// TODO: change to nested window
 	struct Win_nested *send_win = NULL;
 	send_win = win_nested(nickname, 4, rs_col, rs_row-4, 0, 0);
 	if (send_win == NULL) {
