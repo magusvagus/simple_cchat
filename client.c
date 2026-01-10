@@ -16,14 +16,14 @@ int main(void)
 {
 	int SOCK_FileDiscriptor = socket(AF_INET,SOCK_STREAM,0);
 	if (SOCK_FileDiscriptor == -1){
-		err_screen(NULL, NULL,"Error creating file discriptor.\n");
+		win_errpopup(NULL, NULL,"Error creating file discriptor.\n");
 	}
 
 	struct sockaddr_in *address = sock_create_IPV4_addr("127.0.0.1", 2000);
 
 	int err = connect(SOCK_FileDiscriptor, (struct sockaddr *)address, sizeof(*address));
 	if(err == -1){
-		err_screen(NULL, NULL,"Error connecting to file discriptor\n");
+		win_errpopup(NULL, NULL,"Error connecting to file discriptor\n");
 	}else{
 		printf("Connected\n");
 	}
@@ -44,7 +44,7 @@ int main(void)
 	struct Win_nested *log_win = NULL;
 	log_win = win_nested(0, log_winy, log_winx,0,0, 1);
 	if (log_win == NULL) {
-		err_screen(NULL, NULL,"Error creating login window\n");
+		win_errpopup(NULL, NULL,"Error creating login window\n");
 		return -1;
 	}
 
@@ -73,7 +73,7 @@ int main(void)
 				wrefresh(log_win->sub);
 
 				if(strlen(nickname) < 3) {
-					err_screen(NULL,NULL,"Nickname too short (2 - 15 characters.)");
+					win_errpopup(NULL,NULL,"Nickname too short (2 - 15 characters.)");
 					i = 0;
 					memset(nickname, 0, sizeof(nickname));
 					wmove(log_win->sub, 1,1);
@@ -83,7 +83,7 @@ int main(void)
 					wrefresh(log_win->main);
 				}
 				else if (strlen(nickname) > 15) {
-					err_screen(NULL,NULL,"Nickname too long (2 - 15 characters.)");
+					win_errpopup(NULL,NULL,"Nickname too long (2 - 15 characters.)");
 					i = 0;
 					memset(nickname, 0, sizeof(nickname));
 					wmove(log_win->sub, 1,1);
@@ -95,7 +95,7 @@ int main(void)
 				else {
 					int ERR_send = send(SOCK_FileDiscriptor, nickname, sizeof(nickname), 0);
 					if(ERR_send == -1) {
-						err_screen(NULL, NULL,"Error, could not send nickname.\n");
+						win_errpopup(NULL, NULL,"Error, could not send nickname.\n");
 					}
 					break;
 				}
@@ -133,7 +133,7 @@ int main(void)
 	struct Win_nested *send_win = NULL;
 	send_win = win_nested(nickname, 4, rs_col, rs_row-4, 0, 0);
 	if (send_win == NULL) {
-		err_screen(NULL, NULL,"Error creating send window\n");
+		win_errpopup(NULL, NULL,"Error creating send window\n");
 		return -1;
 	}
 
@@ -141,7 +141,7 @@ int main(void)
 	struct Win_nested *recv_win = NULL;
 	recv_win = win_nested("Chatroom", rs_row-4, rs_col,0,0,0);
 	if (send_win == NULL) {
-		err_screen(NULL, NULL,"Error creating recieve window\n");
+		win_errpopup(NULL, NULL,"Error creating recieve window\n");
 		return -1;
 	}
 
@@ -185,7 +185,7 @@ int main(void)
 
 		// test error function
 		if (!test) {
-			err_screen(NULL, "TEST ERR","test error");
+			win_errpopup(NULL, "TEST ERR","test error");
 			test = 1;
 		}
 
@@ -209,7 +209,7 @@ int main(void)
 				// so one recv/send function can parse multiple types of signals/ requests
 				int ERR_send = send(SOCK_FileDiscriptor, message, strlen(message), 0);
 				if(ERR_send == -1) {
-					err_screen(NULL, NULL,"Error, could not send message.\n");
+					win_errpopup(NULL, NULL,"Error, could not send message.\n");
 				}
 
 				i = 0;
@@ -251,7 +251,7 @@ int main(void)
 			r_msg[0] = '\0';
 		} 
 		else if (client_quit == 0) {
-			err_screen(NULL,NULL,"Server closed connection");
+			win_errpopup(NULL,NULL,"Server closed connection");
 			break;
 
 		}
@@ -262,7 +262,7 @@ int main(void)
 			} 
 			else {
 				// Real error
-				err_screen(NULL,NULL,"Error sending message to server");
+				win_errpopup(NULL,NULL,"Error sending message to server");
 				break;
 			}
 		}

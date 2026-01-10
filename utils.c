@@ -17,7 +17,7 @@ timestamp()
 }
 
 void
-err_screen( WINDOW *p_window, char *win_title, char *err_msg) 
+win_errpopup( WINDOW *p_window, char *win_title, char *err_msg) 
 {
 	if (p_window == NULL) {
 		p_window = stdscr;
