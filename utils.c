@@ -146,3 +146,24 @@ win_reset(struct Win_nested *wn1, struct Win_nested *wn2)
 	wrefresh(wn2->main);
 	wrefresh(wn2->sub);
 }
+
+int
+win_ui_init(struct Win_ui ui)
+{
+	// create login window
+	int rs_row;
+	int rs_col;
+	int log_winy = 10;
+	int log_winx = 40;
+	getmaxyx(stdscr,rs_row,rs_col);
+
+	ui.login_win = win_nested(0, log_winy, log_winx,0,0, 1);
+	if (ui.login_win == NULL) {
+		win_errpopup(NULL, NULL,"Error creating login window\n");
+		return -1;
+	}
+
+	return 0;
+};
+
+
