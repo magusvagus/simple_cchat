@@ -13,7 +13,7 @@ struct Win_ui {
 	char *nickname;
 	struct Win_nested *send_win;
 	struct Win_nested *recv_win;
-	struct Win_nested *nick_win;
+	struct Win_nested *login_win;
 };
 
 struct tm* timestamp();
