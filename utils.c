@@ -163,7 +163,7 @@ win_ui_init(struct Win_ui *ui)
 		return -1;
 	}
 
-	ui->send_win = win_nested(ui.nickname, 4, rs_col, rs_row-4, 0, 0);
+	ui->send_win = win_nested(ui->nickname, 4, rs_col, rs_row-4, 0, 0);
 	if (ui->send_win == NULL) {
 		win_errpopup(NULL, NULL,"Error creating send window\n");
 		return -1;
