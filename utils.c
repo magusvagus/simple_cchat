@@ -148,7 +148,7 @@ win_reset(struct Win_nested *wn1, struct Win_nested *wn2)
 }
 
 int
-win_ui_init(struct Win_ui ui)
+win_ui_init(struct Win_ui *ui)
 {
 	// create login window
 	int rs_row;
@@ -157,25 +157,45 @@ win_ui_init(struct Win_ui ui)
 	int log_winx = 40;
 	getmaxyx(stdscr,rs_row,rs_col);
 
-	ui.login_win = win_nested(0, log_winy, log_winx,0,0, 1);
-	if (ui.login_win == NULL) {
+	ui->login_win = win_nested(0, log_winy, log_winx,0,0, 1);
+	if (ui->login_win == NULL) {
 		win_errpopup(NULL, NULL,"Error creating login window\n");
 		return -1;
 	}
 
-	ui.send_win = win_nested(ui.nickname, 4, rs_col, rs_row-4, 0, 0);
-	if (ui.send_win == NULL) {
+	ui->send_win = win_nested(ui.nickname, 4, rs_col, rs_row-4, 0, 0);
+	if (ui->send_win == NULL) {
 		win_errpopup(NULL, NULL,"Error creating send window\n");
 		return -1;
 	}
 
-	ui.recv_win = win_nested("Chatroom", rs_row-4, rs_col,0,0,0);
-	if (ui.send_win == NULL) {
+	ui->recv_win = win_nested("Chatroom", rs_row-4, rs_col,0,0,0);
+	if (ui->send_win == NULL) {
 		win_errpopup(NULL, NULL,"Error creating recieve window\n");
 		return -1;
 	}
 
 	return 0;
+};
+
+void
+win_free(struct Win_ui *ui)
+{
+	// deallocate all heap mem
+	if ( ui->recv_win != NULL ) {
+		free(ui->recv_win);
+		ui->recv_win = NULL;
+	}
+
+	if ( ui->send_win != NULL ) {
+		free(ui->send_win);
+		ui->send_win = NULL;
+	}
+
+	if ( ui->login_win != NULL ) {
+		free(ui->login_win);
+		ui->login_win = NULL;
+	}
 };
 
 
