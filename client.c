@@ -35,11 +35,11 @@ int main(void)
 	// ncurses
 	initscr(); // start curses mode
 	// rs - root screan
-	int rs_row;
-	int rs_col;
-	int log_winy = 10;
-	int log_winx = 40;
-	getmaxyx(stdscr,rs_row,rs_col);
+	// int rs_row;
+	// int rs_col;
+	// int log_winy = 10;
+	// int log_winx = 40;
+	// getmaxyx(stdscr,rs_row,rs_col);
 
 	// struct Win_nested *log_win = NULL;
 	// log_win = win_nested(0, log_winy, log_winx,0,0, 1);
