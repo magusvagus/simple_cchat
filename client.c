@@ -139,22 +139,22 @@ int main(void)
 	// }
 
 	// create win+sub_window
-	struct Win_nested *recv_win = NULL;
-	recv_win = win_nested("Chatroom", rs_row-4, rs_col,0,0,0);
-	if (ui->send_win == NULL) {
-		win_errpopup(NULL, NULL,"Error creating recieve window\n");
-		return -1;
-	}
+	// struct Win_nested *ui->recv_win = NULL;
+	// ui->recv_win = win_nested("Chatroom", rs_row-4, rs_col,0,0,0);
+	// if (ui->send_win == NULL) {
+	// 	win_errpopup(NULL, NULL,"Error creating recieve window\n");
+	// 	return -1;
+	// }
 
 	// disable cursor
 	curs_set(0);
 
 	// TODO: might not be needed for all
 	nodelay(ui->send_win->sub, TRUE);
-	nodelay(recv_win->main, TRUE);
-	nodelay(recv_win->sub, TRUE);
+	nodelay(ui->recv_win->main, TRUE);
+	nodelay(ui->recv_win->sub, TRUE);
 
-	win_reset(ui->send_win, recv_win);
+	win_reset(ui->send_win, ui->recv_win);
 
 	// disable cursor
 	curs_set(0);
@@ -178,11 +178,11 @@ int main(void)
 		// refresh boxes
 		touchwin(stdscr);
 		touchwin(ui->send_win->main);
-		touchwin(recv_win->main);
+		touchwin(ui->recv_win->main);
 
 		// Redraw prompt and current input
 		mvwprintw(ui->send_win->sub, 0, 0, "%s: %s", nickname, message);
-		win_reset(ui->send_win, recv_win);
+		win_reset(ui->send_win, ui->recv_win);
 
 		// test error function
 		if (!test) {
@@ -207,7 +207,7 @@ int main(void)
 				}
 
 				// TODO instead of sending raw text buffer, an type struct should be only send/ recieved
-				// so one recv/send function can parse multiple types of signals/ requests
+				// so one ui->recv/send function can parse multiple types of signals/ requests
 				int ERR_send = send(SOCK_FileDiscriptor, message, strlen(message), 0);
 				if(ERR_send == -1) {
 					win_errpopup(NULL, NULL,"Error, could not send message.\n");
@@ -218,7 +218,7 @@ int main(void)
 				wmove(ui->send_win->sub, 0,1);
 				wclrtoeol(ui->send_win->sub); // clear line to end
 				mvwprintw(ui->send_win->sub, 0, 0, "%s: %s", nickname, message);
-				win_reset(ui->send_win, recv_win);
+				win_reset(ui->send_win, ui->recv_win);
 			}
 			else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
 				// reprint, removing character and set to null
@@ -246,9 +246,9 @@ int main(void)
 		int client_quit = recv(SOCK_FileDiscriptor, r_msg, sizeof(r_msg), 0);
 		if (client_quit > 0 && r_msg[0] != '\0') {
 			// TODO: add timestamp and nick of sender
-			wprintw(recv_win->sub, "Recieved: %s",r_msg);
-			touchwin(recv_win->main);
-			win_reset(ui->send_win, recv_win);
+			wprintw(ui->recv_win->sub, "Recieved: %s",r_msg);
+			touchwin(ui->recv_win->main);
+			win_reset(ui->send_win, ui->recv_win);
 			r_msg[0] = '\0';
 		} 
 		else if (client_quit == 0) {
@@ -273,9 +273,9 @@ int main(void)
 	endwin(); // end curses mode
 	
 	// deallocate heap mem
-	if ( recv_win != NULL ) {
-		free(recv_win);
-		recv_win = NULL;
+	if ( ui->recv_win != NULL ) {
+		free(ui->recv_win);
+		ui->recv_win = NULL;
 	}
 
 	if ( ui->send_win != NULL ) {

@@ -170,11 +170,10 @@ win_ui_init()
 		win_errpopup(NULL, NULL,"Error creating send window\n");
 	}
 
-	// ui.recv_win = win_nested("Chatroom", rs_row-4, rs_col, 0, 0, 0);
-	// if (ui.send_win == NULL) {
-	// 	win_errpopup(NULL, NULL,"Error creating recieve window\n");
-	// 	return -1;
-	// }
+	ui->recv_win = win_nested("Chatroom", rs_row-4, rs_col, 0, 0, 0);
+	if (ui->send_win == NULL) {
+		win_errpopup(NULL, NULL,"Error creating recieve window\n");
+	}
 
 	return ui;
 };
