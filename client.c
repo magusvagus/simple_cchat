@@ -131,17 +131,17 @@ int main(void)
 	fd_set fd_bitmap;
 	int sock_fd = SOCK_FileDiscriptor;
 
-	struct Win_nested *send_win = NULL;
-	send_win = win_nested(nickname, 4, rs_col, rs_row-4, 0, 0);
-	if (send_win == NULL) {
-		win_errpopup(NULL, NULL,"Error creating send window\n");
-		return -1;
-	}
+	// struct Win_nested send_win = NULL;
+	// send_win = win_nested(nickname, 4, rs_col, rs_row-4, 0, 0);
+	// if (send_win == NULL) {
+	// 	win_errpopup(NULL, NULL,"Error creating send window\n");
+	// 	return -1;
+	// }
 
 	// create win+sub_window
 	struct Win_nested *recv_win = NULL;
 	recv_win = win_nested("Chatroom", rs_row-4, rs_col,0,0,0);
-	if (send_win == NULL) {
+	if (ui->send_win == NULL) {
 		win_errpopup(NULL, NULL,"Error creating recieve window\n");
 		return -1;
 	}
@@ -150,11 +150,11 @@ int main(void)
 	curs_set(0);
 
 	// TODO: might not be needed for all
-	nodelay(send_win->sub, TRUE);
+	nodelay(ui->send_win->sub, TRUE);
 	nodelay(recv_win->main, TRUE);
 	nodelay(recv_win->sub, TRUE);
 
-	win_reset(send_win, recv_win);
+	win_reset(ui->send_win, recv_win);
 
 	// disable cursor
 	curs_set(0);
@@ -177,12 +177,12 @@ int main(void)
 	while (1) {
 		// refresh boxes
 		touchwin(stdscr);
-		touchwin(send_win->main);
+		touchwin(ui->send_win->main);
 		touchwin(recv_win->main);
 
 		// Redraw prompt and current input
-		mvwprintw(send_win->sub, 0, 0, "%s: %s", nickname, message);
-		win_reset(send_win, recv_win);
+		mvwprintw(ui->send_win->sub, 0, 0, "%s: %s", nickname, message);
+		win_reset(ui->send_win, recv_win);
 
 		// test error function
 		if (!test) {
@@ -190,7 +190,7 @@ int main(void)
 			test = 1;
 		}
 
-		ch = wgetch(send_win->sub);
+		ch = wgetch(ui->send_win->sub);
 
 		if (ch != ERR) {
 			if (ch == '\n' || ch == '\r') {
@@ -215,10 +215,10 @@ int main(void)
 
 				i = 0;
 				memset(message, 0, sizeof(message));
-				wmove(send_win->sub, 0,1);
-				wclrtoeol(send_win->sub); // clear line to end
-				mvwprintw(send_win->sub, 0, 0, "%s: %s", nickname, message);
-				win_reset(send_win, recv_win);
+				wmove(ui->send_win->sub, 0,1);
+				wclrtoeol(ui->send_win->sub); // clear line to end
+				mvwprintw(ui->send_win->sub, 0, 0, "%s: %s", nickname, message);
+				win_reset(ui->send_win, recv_win);
 			}
 			else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
 				// reprint, removing character and set to null
@@ -226,7 +226,7 @@ int main(void)
 				if (i > 0) {
 					i--;
 					message[i] = ' ';
-					mvwprintw(send_win->sub, 0, 0, "%s: %s", nickname, message);
+					mvwprintw(ui->send_win->sub, 0, 0, "%s: %s", nickname, message);
 					message[i] = '\0';
 				}
 				else {
@@ -235,9 +235,9 @@ int main(void)
 			}
 			else {
 				message[i] = ch;
-				wmove(send_win->sub, 0, 0);
-				wrefresh(send_win->sub);
-				wrefresh(send_win->main);
+				wmove(ui->send_win->sub, 0, 0);
+				wrefresh(ui->send_win->sub);
+				wrefresh(ui->send_win->main);
 				i++;
 			}
 		}
@@ -248,7 +248,7 @@ int main(void)
 			// TODO: add timestamp and nick of sender
 			wprintw(recv_win->sub, "Recieved: %s",r_msg);
 			touchwin(recv_win->main);
-			win_reset(send_win, recv_win);
+			win_reset(ui->send_win, recv_win);
 			r_msg[0] = '\0';
 		} 
 		else if (client_quit == 0) {
@@ -278,9 +278,9 @@ int main(void)
 		recv_win = NULL;
 	}
 
-	if ( send_win != NULL ) {
-		free(send_win);
-		send_win = NULL;
+	if ( ui->send_win != NULL ) {
+		free(ui->send_win);
+		ui->send_win = NULL;
 	}
 
 	if ( ui->login_win != NULL ) {
