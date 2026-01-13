@@ -41,15 +41,17 @@ int main(void)
 	int log_winx = 40;
 	getmaxyx(stdscr,rs_row,rs_col);
 
-	struct Win_nested *log_win = NULL;
-	log_win = win_nested(0, log_winy, log_winx,0,0, 1);
-	if (log_win == NULL) {
-		win_errpopup(NULL, NULL,"Error creating login window\n");
-		return -1;
-	}
+	// struct Win_nested *log_win = NULL;
+	// log_win = win_nested(0, log_winy, log_winx,0,0, 1);
+	// if (log_win == NULL) {
+	// 	win_errpopup(NULL, NULL,"Error creating login window\n");
+	// 	return -1;
+	// }
+
+	struct Win_ui *ui = win_ui_init();
 
 	refresh();
-	wrefresh(log_win->main);
+	wrefresh(ui->login_win->main);
 
 	int ch;
 	int i = 0;
@@ -57,40 +59,40 @@ int main(void)
 	// TODO: move to function
 	// send nickname to server
 	while(1) {
-		touchwin(log_win->main);
+		touchwin(ui->login_win->main);
 
-		mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
-		wrefresh(log_win->sub);
+		mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", nickname);
+		wrefresh(ui->login_win->sub);
 
 		//ch = getch();
-		ch = wgetch(log_win->sub);
+		ch = wgetch(ui->login_win->sub);
 
 		if (ch != ERR) {
 			if (ch == '\n' || ch == '\r') {
 				nickname[i] = '\n';
 
-				mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
-				wrefresh(log_win->sub);
+				mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", nickname);
+				wrefresh(ui->login_win->sub);
 
 				if(strlen(nickname) < 3) {
 					win_errpopup(NULL,NULL,"Nickname too short (2 - 15 characters.)");
 					i = 0;
 					memset(nickname, 0, sizeof(nickname));
-					wmove(log_win->sub, 1,1);
-					wclrtoeol(log_win->sub); // clear line to end
-					mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
-					wrefresh(log_win->sub);
-					wrefresh(log_win->main);
+					wmove(ui->login_win->sub, 1,1);
+					wclrtoeol(ui->login_win->sub); // clear line to end
+					mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", nickname);
+					wrefresh(ui->login_win->sub);
+					wrefresh(ui->login_win->main);
 				}
 				else if (strlen(nickname) > 15) {
 					win_errpopup(NULL,NULL,"Nickname too long (2 - 15 characters.)");
 					i = 0;
 					memset(nickname, 0, sizeof(nickname));
-					wmove(log_win->sub, 1,1);
-					wclrtoeol(log_win->sub); // clear line to end
-					mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
-					wrefresh(log_win->sub);
-					wrefresh(log_win->main);
+					wmove(ui->login_win->sub, 1,1);
+					wclrtoeol(ui->login_win->sub); // clear line to end
+					mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", nickname);
+					wrefresh(ui->login_win->sub);
+					wrefresh(ui->login_win->main);
 				} 
 				else {
 					int ERR_send = send(SOCK_FileDiscriptor, nickname, sizeof(nickname), 0);
@@ -104,11 +106,11 @@ int main(void)
 				if (i > 0) { 
 					i--;
 					nickname[i] = ' ';
-					wclrtoeol(log_win->sub);
-					mvwprintw(log_win->sub, 1, 1, "Nickname: %s", nickname);
+					wclrtoeol(ui->login_win->sub);
+					mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", nickname);
 					nickname[i] = '\0';
-					//wmove(log_win->sub, 1, 1);
-					wrefresh(log_win->sub);
+					//wmove(ui->login_win->sub, 1, 1);
+					wrefresh(ui->login_win->sub);
 				}
 				else {
 					i=0;
@@ -116,8 +118,8 @@ int main(void)
 			}
 			else {
 				nickname[i] = ch;
-				wmove(log_win->sub, 1, 1);
-				wrefresh(log_win->sub);
+				wmove(ui->login_win->sub, 1, 1);
+				wrefresh(ui->login_win->sub);
 				i++;
 			}
 		}
@@ -281,9 +283,9 @@ int main(void)
 		send_win = NULL;
 	}
 
-	if ( log_win != NULL ) {
-		free(log_win); // TODO: maybe better deallocate after nickname was send
-		log_win = NULL;
+	if ( ui->login_win != NULL ) {
+		free(ui->login_win); // TODO: maybe better deallocate after nickname was send
+		ui->login_win = NULL;
 	}
 
 	close(SOCK_FileDiscriptor);
