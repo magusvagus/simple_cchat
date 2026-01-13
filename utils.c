@@ -152,6 +152,7 @@ win_ui_init()
 {
 	struct Win_ui *ui;
 	ui = calloc(1, sizeof(struct Win_ui));
+	//ui->nickname = calloc(20, sizeof(char));
 
 	// create login window
 	int rs_row;

@@ -48,6 +48,7 @@ int main(void)
 	// 	return -1;
 	// }
 
+	// TODO: nickname dosent show up
 	struct Win_ui *ui = win_ui_init();
 
 	refresh();
