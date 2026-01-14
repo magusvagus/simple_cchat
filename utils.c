@@ -147,13 +147,30 @@ win_reset(struct Win_nested *wn1, struct Win_nested *wn2)
 	wrefresh(wn2->sub);
 }
 
-struct Win_ui*
-win_ui_init()
+void
+win_ui_init(struct Win_ui *ui)
 {
-	struct Win_ui *ui;
-	ui = calloc(1, sizeof(struct Win_ui));
-	//ui->nickname = calloc(20, sizeof(char));
+	// create login window
+	int rs_row;
+	int rs_col;
+	int log_winy = 10;
+	int log_winx = 40;
+	getmaxyx(stdscr,rs_row,rs_col);
 
+	ui->send_win = win_nested(ui->nickname, 4, rs_col, rs_row-4, 0, 0);
+	if (ui->send_win == NULL) {
+		win_errpopup(NULL, NULL,"Error creating send window\n");
+	}
+
+	ui->recv_win = win_nested("Chatroom", rs_row-4, rs_col, 0, 0, 0);
+	if (ui->send_win == NULL) {
+		win_errpopup(NULL, NULL,"Error creating recieve window\n");
+	}
+};
+
+void
+win_login_init(struct Win_ui *ui)
+{
 	// create login window
 	int rs_row;
 	int rs_col;
@@ -165,18 +182,6 @@ win_ui_init()
 	if (ui->login_win == NULL) {
 		win_errpopup(NULL, NULL,"Error creating login window\n");
 	}
-
-	ui->send_win = win_nested(ui->nickname, 4, rs_col, rs_row-4, 0, 0);
-	if (ui->send_win == NULL) {
-		win_errpopup(NULL, NULL,"Error creating send window\n");
-	}
-
-	ui->recv_win = win_nested("Chatroom", rs_row-4, rs_col, 0, 0, 0);
-	if (ui->send_win == NULL) {
-		win_errpopup(NULL, NULL,"Error creating recieve window\n");
-	}
-
-	return ui;
 };
 
 void
