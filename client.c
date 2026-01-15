@@ -158,7 +158,7 @@ int main(void)
 	nodelay(ui.recv_win->main, TRUE);
 	nodelay(ui.recv_win->sub, TRUE);
 
-	win_reset(ui.send_win, ui.recv_win);
+	win_reset(&ui);
 
 	// disable cursor
 	curs_set(0);
@@ -186,7 +186,7 @@ int main(void)
 
 		// Redraw prompt and current input
 		mvwprintw(ui.send_win->sub, 0, 0, "%s: %s", nickname, message);
-		win_reset(ui.send_win, ui.recv_win);
+		win_reset(&ui);
 
 		// test error function
 		if (!test) {
@@ -222,7 +222,7 @@ int main(void)
 				wmove(ui.send_win->sub, 0,1);
 				wclrtoeol(ui.send_win->sub); // clear line to end
 				mvwprintw(ui.send_win->sub, 0, 0, "%s: %s", nickname, message);
-				win_reset(ui.send_win, ui.recv_win);
+				win_reset(&ui);
 			}
 			else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
 				// reprint, removing character and set to null
@@ -252,7 +252,7 @@ int main(void)
 			// TODO: add timestamp and nick of sender
 			wprintw(ui.recv_win->sub, "Recieved: %s",r_msg);
 			touchwin(ui.recv_win->main);
-			win_reset(ui.send_win, ui.recv_win);
+			win_reset(&ui);
 			r_msg[0] = '\0';
 		} 
 		else if (client_quit == 0) {
