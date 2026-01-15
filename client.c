@@ -34,6 +34,7 @@ int main(void)
 
 	// ncurses
 	initscr(); // start curses mode
+ 
 	// rs - root screan
 	// int rs_row;
 	// int rs_col;
@@ -50,7 +51,7 @@ int main(void)
 
 	struct Win_ui ui = {0};
 	ui.nickname = nickname;
-	win_login_init(&ui);
+	win_login_ui_init(&ui);
 
 	refresh();
 	wrefresh(ui.login_win->main);

@@ -21,7 +21,7 @@ void win_errpopup(WINDOW *p_window,char *win_title, char *err_msg);
 struct Win_nested* win_nested(char *title, int winy, int winx, int drawpty, int drawptx, int wfl);
 void win_reset(struct Win_nested *wn1, struct Win_nested *wn2);
 void win_ui_init(struct Win_ui *ui);
-void win_login_init(struct Win_ui *ui);
+void win_login_ui_init(struct Win_ui *ui);
 void win_free(struct Win_ui *ui);
 
 #endif 
