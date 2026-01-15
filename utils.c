@@ -139,12 +139,22 @@ win_nested(char *title, int winy, int winx, int drawpty, int drawptx, int wfl)
 }
 
 void
-win_reset(struct Win_nested *wn1, struct Win_nested *wn2)
+win_reset(struct Win_ui *ui)
 {
-	wrefresh(wn1->main);
-	wrefresh(wn1->sub);
-	wrefresh(wn2->main);
-	wrefresh(wn2->sub);
+	if(ui->send_win->main != NULL) {
+		wrefresh(ui->send_win->main);
+		wrefresh(ui->send_win->sub);
+	}
+
+	if(ui->recv_win->main != NULL) {
+		wrefresh(ui->recv_win->main);
+		wrefresh(ui->recv_win->sub);
+	}
+
+	if(ui->login_win->main != NULL) {
+		wrefresh(ui->login_win->main);
+		wrefresh(ui->login_win->sub);
+	}
 }
 
 void
