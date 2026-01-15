@@ -148,7 +148,7 @@ win_reset(struct Win_nested *wn1, struct Win_nested *wn2)
 }
 
 void
-win_ui_init(struct Win_ui *ui)
+win_main_ui_init(struct Win_ui *ui)
 {
 	// create login window
 	int rs_row;
@@ -169,7 +169,7 @@ win_ui_init(struct Win_ui *ui)
 };
 
 void
-win_login_init(struct Win_ui *ui)
+win_login_ui_init(struct Win_ui *ui)
 {
 	// create login window
 	int rs_row;
