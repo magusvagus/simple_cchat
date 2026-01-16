@@ -58,8 +58,8 @@ int main(void)
 
 	win_login_input(&ui, SOCK_FileDiscriptor);
 
-	// int ch;
-	// int i = 0;
+	int ch;
+	int i = 0;
 
 	// TODO: move to function
 	// send nickname to server
