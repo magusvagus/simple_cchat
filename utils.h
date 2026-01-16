@@ -23,5 +23,6 @@ void win_reset(struct Win_ui *ui);
 void win_main_ui_init(struct Win_ui *ui);
 void win_login_ui_init(struct Win_ui *ui);
 void win_free(struct Win_ui *ui);
+void win_login_input(struct Win_ui *ui, int socket_fd);
 
 #endif 

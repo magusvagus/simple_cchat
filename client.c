@@ -80,7 +80,7 @@ int main(void)
 				if(strlen(ui.nickname) < 3) {
 					win_errpopup(NULL,NULL,"Nickname too short (2 - 15 characters.)");
 					i = 0;
-					memset(ui.nickname, 0, sizeof(ui.nickname));
+					memset(ui.nickname, 0, sizeof(*ui.nickname));
 					wmove(ui.login_win->sub, 1,1);
 					wclrtoeol(ui.login_win->sub); // clear line to end
 					mvwprintw(ui.login_win->sub, 1, 1, "Nickname: %s", ui.nickname);
@@ -90,7 +90,7 @@ int main(void)
 				else if (strlen(ui.nickname) > 15) {
 					win_errpopup(NULL,NULL,"Nickname too long (2 - 15 characters.)");
 					i = 0;
-					memset(ui.nickname, 0, sizeof(ui.nickname));
+					memset(ui.nickname, 0, sizeof(*ui.nickname));
 					wmove(ui.login_win->sub, 1,1);
 					wclrtoeol(ui.login_win->sub); // clear line to end
 					mvwprintw(ui.login_win->sub, 1, 1, "Nickname: %s", ui.nickname);
@@ -273,7 +273,7 @@ int main(void)
 		}
 		usleep(10000);
 	}
-
+	
 	endwin(); // end curses mode
 	
 	// deallocate heap mem

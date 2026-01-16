@@ -5,6 +5,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/socket.h>
 
 
 struct tm* 
@@ -214,4 +215,78 @@ win_free(struct Win_ui *ui)
 	}
 };
 
+void
+win_login_input(struct Win_ui *ui, int socket_fd)
+{
+	int ch;
+	int i = 0;
+
+	// send nickname to server
+	while(1) {
+		touchwin(ui->login_win->main);
+
+		mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", ui->nickname);
+		wrefresh(ui->login_win->sub);
+
+		ch = wgetch(ui->login_win->sub);
+
+		if (ch != ERR) {
+			if (ch == '\n' || ch == '\r') {
+				ui->nickname[i] = '\n';
+
+				mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", ui->nickname);
+				wrefresh(ui->login_win->sub);
+
+				if(strlen(ui->nickname) < 3) {
+					win_errpopup(NULL,NULL,"Nickname too short (2 - 15 characters.)");
+					i = 0;
+					memset(ui->nickname, 0, sizeof(*ui->nickname));
+					wmove(ui->login_win->sub, 1,1);
+					wclrtoeol(ui->login_win->sub); // clear line to end
+					mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", ui->nickname);
+					wrefresh(ui->login_win->sub);
+					wrefresh(ui->login_win->main);
+				}
+				else if (strlen(ui->nickname) > 15) {
+					win_errpopup(NULL,NULL,"Nickname too long (2 - 15 characters.)");
+					i = 0;
+					memset(ui->nickname, 0, sizeof(*ui->nickname));
+					wmove(ui->login_win->sub, 1,1);
+					wclrtoeol(ui->login_win->sub); // clear line to end
+					mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", ui->nickname);
+					wrefresh(ui->login_win->sub);
+					wrefresh(ui->login_win->main);
+				} 
+				else {
+					int ERR_send = send(socket_fd, ui->nickname, sizeof(ui->nickname), 0);
+					if(ERR_send == -1) {
+						win_errpopup(NULL, NULL,"Error, could not send nickname.\n");
+					}
+					break;
+				}
+			}
+			else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
+				if (i > 0) { 
+					i--;
+					ui->nickname[i] = ' ';
+					wclrtoeol(ui->login_win->sub);
+					mvwprintw(ui->login_win->sub, 1, 1, "Nickname: %s", ui->nickname);
+					ui->nickname[i] = '\0';
+					//wmove(ui->login_win->sub, 1, 1);
+					wrefresh(ui->login_win->sub);
+				}
+				else {
+					i=0;
+				}
+			}
+			else {
+				ui->nickname[i] = ch;
+				wmove(ui->login_win->sub, 1, 1);
+				wrefresh(ui->login_win->sub);
+				i++;
+			}
+		}
+	}
+
+}
 
