@@ -75,12 +75,12 @@ int main(void)
 	keypad(stdscr, TRUE);
 
 	i = 0;
-
 	int test = 0;
 
 	// Set socket to non-blocking
 	int flags = fcntl(SOCK_FileDiscriptor, F_GETFL, 0);
 	fcntl(SOCK_FileDiscriptor, F_SETFL, flags | O_NONBLOCK);
+
 
 	// TODO: move to seperate function
 	while (1) {
@@ -176,7 +176,7 @@ int main(void)
 				break;
 			}
 		}
-		usleep(10000);
+		usleep(100000);
 	}
 	
 	endwin(); // end curses mode

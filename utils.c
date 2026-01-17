@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <sys/select.h>
 
 
 struct tm* 
@@ -295,6 +296,9 @@ win_login_input(struct Win_ui *ui, int socket_fd)
 void
 win_ui_input(struct Win_ui *ui, int socket_fd)
 {
+	fd_set fd_bitmap;
+	int sock_fd = socket_fd;
+
 	// Set socket to non-blocking
 	int flags = fcntl(socket_fd, F_GETFL, 0);
 	fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK);
@@ -396,8 +400,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				break;
 			}
 		}
-		usleep(10000);
+		usleep(100000);
 	}
-
 }
 
