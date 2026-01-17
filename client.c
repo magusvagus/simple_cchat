@@ -34,20 +34,6 @@ int main(void)
 
 	// ncurses
 	initscr(); // start curses mode
- 
-	// rs - root screan
-	// int rs_row;
-	// int rs_col;
-	// int log_winy = 10;
-	// int log_winx = 40;
-	// getmaxyx(stdscr,rs_row,rs_col);
-
-	// struct Win_nested *log_win = NULL;
-	// log_win = win_nested(0, log_winy, log_winx,0,0, 1);
-	// if (log_win == NULL) {
-	// 	win_errpopup(NULL, NULL,"Error creating login window\n");
-	// 	return -1;
-	// }
 
 	struct Win_ui ui = {0};
 	ui.nickname = nickname;
@@ -61,75 +47,6 @@ int main(void)
 	int ch;
 	int i = 0;
 
-	// TODO: move to function
-	// send nickname to server
-	// while(1) {
-	// 	touchwin(ui.login_win->main);
-	//
-	// 	mvwprintw(ui.login_win->sub, 1, 1, "Nickname: %s", ui.nickname);
-	// 	wrefresh(ui.login_win->sub);
-	//
-	// 	//ch = getch();
-	// 	ch = wgetch(ui.login_win->sub);
-	//
-	// 	if (ch != ERR) {
-	// 		if (ch == '\n' || ch == '\r') {
-	// 			ui.nickname[i] = '\n';
-	//
-	// 			mvwprintw(ui.login_win->sub, 1, 1, "Nickname: %s", ui.nickname);
-	// 			wrefresh(ui.login_win->sub);
-	//
-	// 			if(strlen(ui.nickname) < 3) {
-	// 				win_errpopup(NULL,NULL,"Nickname too short (2 - 15 characters.)");
-	// 				i = 0;
-	// 				memset(ui.nickname, 0, sizeof(*ui.nickname));
-	// 				wmove(ui.login_win->sub, 1,1);
-	// 				wclrtoeol(ui.login_win->sub); // clear line to end
-	// 				mvwprintw(ui.login_win->sub, 1, 1, "Nickname: %s", ui.nickname);
-	// 				wrefresh(ui.login_win->sub);
-	// 				wrefresh(ui.login_win->main);
-	// 			}
-	// 			else if (strlen(ui.nickname) > 15) {
-	// 				win_errpopup(NULL,NULL,"Nickname too long (2 - 15 characters.)");
-	// 				i = 0;
-	// 				memset(ui.nickname, 0, sizeof(*ui.nickname));
-	// 				wmove(ui.login_win->sub, 1,1);
-	// 				wclrtoeol(ui.login_win->sub); // clear line to end
-	// 				mvwprintw(ui.login_win->sub, 1, 1, "Nickname: %s", ui.nickname);
-	// 				wrefresh(ui.login_win->sub);
-	// 				wrefresh(ui.login_win->main);
-	// 			} 
-	// 			else {
-	// 				int ERR_send = send(SOCK_FileDiscriptor, ui.nickname, sizeof(ui.nickname), 0);
-	// 				if(ERR_send == -1) {
-	// 					win_errpopup(NULL, NULL,"Error, could not send nickname.\n");
-	// 				}
-	// 				break;
-	// 			}
-	// 		}
-	// 		else if (ch == KEY_BACKSPACE || ch == 127 || ch == '\b') {
-	// 			if (i > 0) { 
-	// 				i--;
-	// 				ui.nickname[i] = ' ';
-	// 				wclrtoeol(ui.login_win->sub);
-	// 				mvwprintw(ui.login_win->sub, 1, 1, "Nickname: %s", ui.nickname);
-	// 				ui.nickname[i] = '\0';
-	// 				//wmove(ui.login_win->sub, 1, 1);
-	// 				wrefresh(ui.login_win->sub);
-	// 			}
-	// 			else {
-	// 				i=0;
-	// 			}
-	// 		}
-	// 		else {
-	// 			ui.nickname[i] = ch;
-	// 			wmove(ui.login_win->sub, 1, 1);
-	// 			wrefresh(ui.login_win->sub);
-	// 			i++;
-	// 		}
-	// 	}
-	// }
-
 	// remove \n 
 	ui.nickname[strlen(ui.nickname) -1] = '\0';
 
@@ -137,20 +54,6 @@ int main(void)
 	int sock_fd = SOCK_FileDiscriptor;
 
 	win_main_ui_init(&ui);
-	// struct Win_nested send_win = NULL;
-	// send_win = win_nested(nickname, 4, rs_col, rs_row-4, 0, 0);
-	// if (send_win == NULL) {
-	// 	win_errpopup(NULL, NULL,"Error creating send window\n");
-	// 	return -1;
-	// }
-
-	// create win+sub_window
-	// struct Win_nested *ui.recv_win = NULL;
-	// ui.recv_win = win_nested("Chatroom", rs_row-4, rs_col,0,0,0);
-	// if (ui.send_win == NULL) {
-	// 	win_errpopup(NULL, NULL,"Error creating recieve window\n");
-	// 	return -1;
-	// }
 
 	// disable cursor
 	curs_set(0);
