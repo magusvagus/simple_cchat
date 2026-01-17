@@ -43,10 +43,11 @@ int main(void)
 		// this function locks the program until
 		// accept function confirms connection
 		//
-		// create a new client struct and point it 
+		// creates a new client struct and point it 
 		// to the user_list struct member
 		struct AcceptedSocket *new_client = 
 			sock_accept_client(serv_file_discriptor);
+
 		new_client->user_list = sock_client_list;
 		sock_client_list = new_client;
 

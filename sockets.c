@@ -51,8 +51,8 @@ sock_accept_client(int serv_file_discriptor)
 	// set timestamp
 	ts = timestamp();
 
-	struct AcceptedSocket *s = 
-		calloc(1, sizeof(struct AcceptedSocket));
+	struct AcceptedSocket *s = calloc(1, sizeof(struct AcceptedSocket));
+
 	s->fileDiscriptor = client_file_discriptor;
 	s->address = client_address;
 	s->addressSize = client_address_size;
@@ -74,8 +74,8 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 	char nickname[17];
 
 	// ask for nickname
-	int client_quit = recv(acceptedSocket->fileDiscriptor, 
-			nickname, sizeof(nickname), 0);
+	int client_quit = 
+		recv(acceptedSocket->fileDiscriptor, nickname, sizeof(nickname), 0);
 
 	// remove \n 
 	nickname[strlen(nickname) -1] = '\0';

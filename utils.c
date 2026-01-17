@@ -287,6 +287,5 @@ win_login_input(struct Win_ui *ui, int socket_fd)
 			}
 		}
 	}
-
 }
 

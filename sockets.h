@@ -10,6 +10,13 @@
 #define SIG_MSG   1
 #define SIG_QUIT  2
 #define SIG_NICK  3
+// TODO: add more
+// #define SIG_PRINT_LIST
+// #define SIG_PRINT_STATUS
+// #define SIG_KICK
+// #define SIG_BAN
+// #define SIG_TIME_ONLINE
+// #define SIG_MSG_USER
 
 struct AcceptedSocket {
 	int fileDiscriptor;
