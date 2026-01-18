@@ -28,8 +28,6 @@ int main(void)
 		printf("Connected\n");
 	}
 
-	char message[1024];
-	char buffer[1024];
 	char nickname[17];
 
 	// ncurses
