@@ -296,16 +296,17 @@ win_login_input(struct Win_ui *ui, int socket_fd)
 void
 win_ui_input(struct Win_ui *ui, int socket_fd)
 {
-	fd_set fd_bitmap;
-	int sock_fd = socket_fd;
+	// fd_set fd_bitmap;
+	// int sock_fd = socket_fd;
 
 	// Set socket to non-blocking
-	int flags = fcntl(socket_fd, F_GETFL, 0);
-	fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK);
+	// int flags = fcntl(socket_fd, F_GETFL, 0);
+	// fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK);
 
 	int ch;
 	int i = 0;
-	char message[1024];
+	char message[1024] = "";
+	static int test = 0;
 
 	while (1) {
 		// refresh boxes
@@ -317,11 +318,11 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 		mvwprintw(ui->send_win->sub, 0, 0, "%s: %s", ui->nickname, message);
 		win_reset(ui);
 
-		// // test error function
-		// if (!test) {
-		// 	win_errpopup(NULL, "TEST ERR","test error");
-		// 	test = 1;
-		// }
+		// test error function
+		if (!test) {
+			win_errpopup(NULL, "TEST ERR","test error");
+			test = 1;
+		}
 
 		ch = wgetch(ui->send_win->sub);
 
