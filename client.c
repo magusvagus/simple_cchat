@@ -28,13 +28,14 @@ int main(void)
 		printf("Connected\n");
 	}
 
-	char nickname[17];
+	char nickname[17] = "";
 
 	// ncurses
 	initscr(); // start curses mode
 
 	struct Win_ui ui = {0};
 	ui.nickname = nickname;
+
 	win_login_ui_init(&ui);
 
 	refresh();
@@ -79,7 +80,7 @@ int main(void)
 	int flags = fcntl(SOCK_FileDiscriptor, F_GETFL, 0);
 	fcntl(SOCK_FileDiscriptor, F_SETFL, flags | O_NONBLOCK);
 
-	win_ui_input(&ui, SOCK_FileDiscriptor);
+	win_ui_input(&ui, SOCK_FileDiscriptor, stdscr);
 
 	// TODO: move to seperate function
 	// while (1) {
