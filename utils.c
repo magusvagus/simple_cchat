@@ -296,12 +296,8 @@ win_login_input(struct Win_ui *ui, int socket_fd)
 void
 win_ui_input(struct Win_ui *ui, int socket_fd, WINDOW* stdscr)
 {
-	fd_set fd_bitmap;
-	int sock_fd = socket_fd;
-
-	// Set socket to non-blocking
-	// int flags = fcntl(socket_fd, F_GETFL, 0);
-	// fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK);
+	// fd_set fd_bitmap;
+	// int sock_fd = socket_fd;
 
 	int ch;
 	int i = 0;
