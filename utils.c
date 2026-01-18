@@ -293,6 +293,8 @@ win_login_input(struct Win_ui *ui, int socket_fd)
 }
 
 
+// entering this loop, increases drastically memory and cpu use
+// must be fixed.
 void
 win_ui_input(struct Win_ui *ui, int socket_fd)
 {
