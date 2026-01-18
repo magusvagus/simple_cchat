@@ -35,6 +35,10 @@ struct AcceptedSocket {
 	struct AcceptedSocket *user_list;
 };
 
+// signal must have the same memory size across
+// systems, since INTs and other data types have different
+// size based on local architecture, a fixed sized data type 
+// must be defined.
 struct Signal {
 	int type;
 	char message;
