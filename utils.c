@@ -294,11 +294,8 @@ win_login_input(struct Win_ui *ui, int socket_fd)
 
 
 void
-win_ui_input(struct Win_ui *ui, int socket_fd, WINDOW* stdscr)
+win_ui_input(struct Win_ui *ui, int socket_fd)
 {
-	// fd_set fd_bitmap;
-	// int sock_fd = socket_fd;
-
 	int ch;
 	int i = 0;
 	char message[1024] = "";
