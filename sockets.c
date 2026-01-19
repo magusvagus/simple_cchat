@@ -133,3 +133,14 @@ wrapper_listen_print(void* arg)
 	return NULL;
 }
 
+int 
+sock_send_sig(int socket_fd, int SIG)
+{
+	int err_send = send(socket_fd, &SIG, sizeof(SIG), 0);
+	if(err_send == -1) {
+		win_errpopup(NULL, NULL,"Error, could not send nickname.\n");
+		return err_send;
+	}
+	return 0;
+}
+
