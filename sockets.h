@@ -41,7 +41,7 @@ struct AcceptedSocket {
 // must be defined.
 struct Signal {
 	uint8_t type;
-	unsigned char *buffer;
+	unsigned char buffer[209];
 	char message[205];
 	char nickname[20];
 };
