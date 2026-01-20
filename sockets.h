@@ -40,7 +40,7 @@ struct AcceptedSocket {
 // size based on local architecture, a fixed sized data type 
 // must be defined.
 struct Signal {
-	int type;
+	uint8_t type;
 	char message[205];
 	char nickname[20];
 };
