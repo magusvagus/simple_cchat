@@ -68,6 +68,7 @@ struct AcceptedSocket* sock_accept_client(int SERV_FileDisctiptor);
 void sock_listen_print(struct AcceptedSocket *acceptedSocket);
 void* wrapper_listen_print(void* arg);
 int sock_send_sig(int socket_fd, int SIG);
+unsigned char* sock_serialize_sig(struct Signal *sig);
 
 #endif
 
