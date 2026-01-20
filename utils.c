@@ -399,4 +399,3 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 		usleep(100000);
 	}
 }
-

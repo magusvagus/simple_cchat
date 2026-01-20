@@ -41,8 +41,8 @@ struct AcceptedSocket {
 // must be defined.
 struct Signal {
 	int type;
-	char message;
-	char nickname;
+	char message[205];
+	char nickname[20];
 };
 
 struct Serv_options {

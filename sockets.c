@@ -133,7 +133,7 @@ wrapper_listen_print(void* arg)
 	return NULL;
 }
 
-int 
+int
 sock_send_sig(int socket_fd, int SIG)
 {
 	int err_send = send(socket_fd, &SIG, sizeof(SIG), 0);
