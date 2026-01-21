@@ -39,7 +39,7 @@ struct AcceptedSocket {
 // systems, since INTs and other data types have different
 // size based on local architecture, a fixed sized data type 
 // must be defined.
-struct Signal {
+struct Packet {
 	uint8_t type;
 	unsigned char buffer[209];
 	char message[205];

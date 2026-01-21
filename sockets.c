@@ -145,16 +145,16 @@ sock_send_sig(int socket_fd, unsigned char *sig)
 }
 
 unsigned char* 
-sock_serialize_sig(struct Signal *sig)
+sock_serialize_sig(struct Packet *pak)
 {
-	sig->buffer[0] = sig->type >> 24;
-	sig->buffer[1] = sig->type >> 16;
-	sig->buffer[2] = sig->type >> 8;
-	sig->buffer[3] = sig->type;
+	pak->buffer[0] = pak->type >> 24;
+	pak->buffer[1] = pak->type >> 16;
+	pak->buffer[2] = pak->type >> 8;
+	pak->buffer[3] = pak->type;
 
 	for (int i = 0; 0 > i; i++) {
-		sig->buffer[4 + i] = sig->message[i];
+		pak->buffer[4 + i] = pak->message[i];
 	}
 
-	return sig->buffer + 209;
+	return pak->buffer + 209;
 }
