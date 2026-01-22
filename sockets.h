@@ -46,23 +46,6 @@ struct Packet {
 	char nickname[20];
 };
 
-struct Serv_options {
-	int quit_forcefully;
-	int quit_gracefully;
-	int print_user_list;
-	int print_user_timestamp;
-	int kick_user;
-	int message_user;
-};
-
-struct Serv_main_loop {
-	struct AcceptedSocket *s;
-	int serv_file_discriptor;
-	int *quit;
-};
-
-extern struct Serv_options serv_option;
-
 struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port);
 struct AcceptedSocket* sock_accept_client(int SERV_FileDisctiptor);
 void sock_listen_print(struct AcceptedSocket *acceptedSocket);
