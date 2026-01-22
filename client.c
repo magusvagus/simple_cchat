@@ -80,7 +80,7 @@ int main(void)
 	int flags = fcntl(SOCK_FileDiscriptor, F_GETFL, 0);
 	fcntl(SOCK_FileDiscriptor, F_SETFL, flags | O_NONBLOCK);
 
-	win_ui_input(&ui, SOCK_FileDiscriptor, stdscr);
+	win_ui_input(&ui, SOCK_FileDiscriptor);
 
 	// TODO: move to seperate function
 	// while (1) {
