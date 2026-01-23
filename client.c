@@ -14,6 +14,8 @@
 
 int main(void)
 {
+	/* --- sockets --- */
+
 	int SOCK_FileDiscriptor = socket(AF_INET,SOCK_STREAM,0);
 	if (SOCK_FileDiscriptor == -1){
 		win_errpopup(NULL, NULL,"Error creating file discriptor.\n");
@@ -28,11 +30,21 @@ int main(void)
 		printf("Connected\n");
 	}
 
-	char nickname[17] = "";
+	fd_set fd_bitmap;
+	int sock_fd = SOCK_FileDiscriptor;
+
+	// Set socket to non-blocking
+	int flags = fcntl(SOCK_FileDiscriptor, F_GETFL, 0);
+	fcntl(SOCK_FileDiscriptor, F_SETFL, flags | O_NONBLOCK);
+
+
+
+	/* --- chat ui --- */
 
 	// ncurses
 	initscr(); // start curses mode
 
+	char nickname[17] = "";
 	struct Win_ui ui = {0};
 	ui.nickname = nickname;
 
@@ -47,11 +59,12 @@ int main(void)
 	// remove \n 
 	ui.nickname[strlen(ui.nickname) -1] = '\0';
 
-	fd_set fd_bitmap;
-	int sock_fd = SOCK_FileDiscriptor;
-
 	// initialise main ui (recv and send screen)
 	win_main_ui_init(&ui);
+
+
+
+	/* --- ncurses options --- */
 
 	// disable cursor
 	curs_set(0);
@@ -60,20 +73,24 @@ int main(void)
 	nodelay(ui.send_win->sub, TRUE);
 	nodelay(ui.recv_win->main, TRUE);
 	nodelay(ui.recv_win->sub, TRUE);
+	nodelay(stdscr, TRUE);
 
 	win_reset(&ui);
 
 	cbreak();
-	nodelay(stdscr, TRUE);
 	timeout(0);
 	noecho();
 	keypad(stdscr, TRUE);
 
-	// Set socket to non-blocking
-	int flags = fcntl(SOCK_FileDiscriptor, F_GETFL, 0);
-	fcntl(SOCK_FileDiscriptor, F_SETFL, flags | O_NONBLOCK);
+
+
+	/* --- main input loop --- */
 
 	win_ui_input(&ui, SOCK_FileDiscriptor);
+
+
+
+	/* --- deallocate memory --- */
 	
 	endwin(); // end curses mode
 	
@@ -82,4 +99,5 @@ int main(void)
 
 	close(SOCK_FileDiscriptor);
 	return 0;
+
 }
