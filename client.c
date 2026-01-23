@@ -63,9 +63,6 @@ int main(void)
 
 	win_reset(&ui);
 
-	// disable cursor
-	curs_set(0);
-
 	cbreak();
 	nodelay(stdscr, TRUE);
 	timeout(0);
