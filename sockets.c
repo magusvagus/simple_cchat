@@ -5,7 +5,6 @@
 #include <time.h>
 #include <pthread.h>
 
-struct Serv_options serv_option = {0};
 struct tm *ts = NULL;
 
 // since function created on the stack wipe everything
