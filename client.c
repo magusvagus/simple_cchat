@@ -36,15 +36,13 @@ int main(void)
 	struct Win_ui ui = {0};
 	ui.nickname = nickname;
 
+	// initialize login window
 	win_login_ui_init(&ui);
-
 	refresh();
 	wrefresh(ui.login_win->main);
 
+	// write to login widow
 	win_login_input(&ui, SOCK_FileDiscriptor);
-
-	int ch;
-	int i = 0;
 
 	// remove \n 
 	ui.nickname[strlen(ui.nickname) -1] = '\0';
@@ -52,6 +50,7 @@ int main(void)
 	fd_set fd_bitmap;
 	int sock_fd = SOCK_FileDiscriptor;
 
+	// initialise main ui (recv and send screen)
 	win_main_ui_init(&ui);
 
 	// disable cursor
@@ -72,9 +71,6 @@ int main(void)
 	timeout(0);
 	noecho();
 	keypad(stdscr, TRUE);
-
-	i = 0;
-	int test = 0;
 
 	// Set socket to non-blocking
 	int flags = fcntl(SOCK_FileDiscriptor, F_GETFL, 0);
