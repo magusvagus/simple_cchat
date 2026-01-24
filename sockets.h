@@ -40,6 +40,7 @@ struct AcceptedSocket {
 // size based on local architecture, a fixed sized data type 
 // must be defined.
 struct Packet {
+	int32_t type_test;
 	uint8_t type;
 	unsigned char buffer[209];
 	char message[205];
