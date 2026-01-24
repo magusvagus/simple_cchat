@@ -144,7 +144,7 @@ sock_send_sig(int socket_fd, unsigned char *sig)
 }
 
 unsigned char* 
-sock_serialize_sig(struct Packet *pak)
+sock_serialize_packet(struct Packet *pak)
 {
 	for (int i = 0; i < sizeof(pak->buffer); i++) {
 		pak->buffer[1 + i] = pak->message[i];
