@@ -133,9 +133,9 @@ wrapper_listen_print(void* arg)
 }
 
 int
-sock_send_sig(int socket_fd, unsigned char *sig)
+sock_send_sig(int socket_fd, struct Packet *pak)
 {
-	int err_send = send(socket_fd, sig, sizeof(sig), 0);
+	int err_send = send(socket_fd, pak->buffer, sizeof(pak->buffer), 0);
 	if(err_send == -1) {
 		win_errpopup(NULL, NULL,"Error, could not send nickname.\n");
 		return err_send;
