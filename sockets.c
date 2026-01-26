@@ -157,3 +157,21 @@ sock_serialize_packet(struct Packet *pak)
 
 	return pak->buffer;
 }
+
+void
+sock_read_packet(char *raw_buffer, struct Packet *pak)
+{
+	// read type_test in big-endian
+	uint32_t type_test = 
+		(uint32_t)raw_buffer[0] << 24 |
+		(uint32_t)raw_buffer[1] << 16 |
+		(uint32_t)raw_buffer[2] << 8  |
+		(uint32_t)raw_buffer[3];
+
+	pak->type_test = type_test;
+
+	for (int i = 0; i < 205; i++) {
+		pak->message[i] = raw_buffer[4 + i];
+	}
+
+}
