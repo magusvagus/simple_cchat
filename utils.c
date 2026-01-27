@@ -337,8 +337,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 					continue;
 				}
 
-				// TODO instead of sending raw text buffer, an type struct should be only send/ recieved
-				// so one ui.recv/send function can parse multiple types of signals/ requests
+				// Serialize and send packet
 				pak.type_test = SIG_MSG;
 				strcpy(pak.message, message);
 				sock_serialize_packet(&pak);
