@@ -71,6 +71,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 {
 	char buffer[1024];
 	char nickname[17];
+	struct Packet pak = {0};
 
 	// ask for nickname
 	int client_quit = 
@@ -94,6 +95,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 	while(1) {
 		int client_quit = 
 			recv(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
+			sock_read_packet(buffer, &pak);
 
 		if ( client_quit > 0) {
 			buffer[client_quit] = '\0';
@@ -113,9 +115,9 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 
 		// TODO send back/ echo the message to the client/s
 		printf("%02d:%02d:%02d %s: %s",
-				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, buffer);
+				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, pak.message);
 
-		send(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
+		send(acceptedSocket->fileDiscriptor, pak.message, sizeof(pak.message), 0);
 
 		// reset buffer
 		buffer[0] = '\0';
@@ -143,6 +145,7 @@ sock_send_sig(int socket_fd, struct Packet *pak)
 	return 0;
 }
 
+// TODO: can be void func
 unsigned char*
 sock_serialize_packet(struct Packet *pak)
 {
