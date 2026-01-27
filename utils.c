@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "sockets.h"
 #include <time.h>
 #include <ncurses.h>
 #include <string.h>
@@ -302,6 +303,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 	int i = 0;
 	char message[1024] = "";
 	static int test = 0;
+	struct Packet pak = {0};
 
 	while (1) {
 		// refresh boxes
@@ -337,10 +339,15 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 
 				// TODO instead of sending raw text buffer, an type struct should be only send/ recieved
 				// so one ui.recv/send function can parse multiple types of signals/ requests
-				int ERR_send = send(socket_fd, message, strlen(message), 0);
-				if(ERR_send == -1) {
-					win_errpopup(NULL, NULL,"Error, could not send message.\n");
-				}
+				pak.type_test = SIG_MSG;
+				strcpy(pak.message, message);
+				sock_serialize_packet(&pak);
+				sock_send_sig(socket_fd, &pak);
+				
+				// int ERR_send = send(socket_fd, message, strlen(message), 0);
+				// if(ERR_send == -1) {
+				// 	win_errpopup(NULL, NULL,"Error, could not send message.\n");
+				// }
 
 				i = 0;
 				memset(message, 0, sizeof(message));
