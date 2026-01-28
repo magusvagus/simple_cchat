@@ -224,6 +224,7 @@ win_login_input(struct Win_ui *ui, int socket_fd)
 {
 	int ch;
 	int i = 0;
+	struct Packet pak = {0};
 
 	// send nickname to server
 	while(1) {
@@ -262,6 +263,7 @@ win_login_input(struct Win_ui *ui, int socket_fd)
 					wrefresh(ui->login_win->main);
 				} 
 				else {
+					// TODO: send nickname inside packet
 					int ERR_send = send(socket_fd, ui->nickname, sizeof(ui->nickname), 0);
 					if(ERR_send == -1) {
 						win_errpopup(NULL, NULL,"Error, could not send nickname.\n");
@@ -369,21 +371,25 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 		}
 
 		char r_msg[256];
+		// has no nickname information, must get packet instead of char buffer
+		// TODO: must be serialized and nickname must be printed
 		int client_quit = recv(socket_fd, r_msg, sizeof(r_msg), 0);
 		if (client_quit > 0 && r_msg[0] != '\0') {
 			// get timestamp
 			struct tm *ts = NULL;
 			ts = timestamp();
 
+			// print recieved message to screen
 			wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec,r_msg);
 			touchwin(ui->recv_win->main);
 			win_reset(ui);
+
+			// reset message buffer for use
 			r_msg[0] = '\0';
 		} 
 		else if (client_quit == 0) {
 			win_errpopup(NULL,NULL,"Server closed connection");
 			break;
-
 		}
 		else {
 			if (errno == EAGAIN || errno == EWOULDBLOCK) {

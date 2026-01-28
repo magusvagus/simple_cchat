@@ -113,7 +113,6 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		// update timestamp
 		ts = timestamp();
 
-		// TODO send back/ echo the message to the client/s
 		printf("%02d:%02d:%02d %s: %s",
 				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, pak.message);
 
@@ -126,8 +125,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 	close(acceptedSocket->fileDiscriptor);
 }
 
-
-void* 
+void*
 wrapper_listen_print(void* arg)
 {
 	struct AcceptedSocket* AcceptedSocket = (struct AcceptedSocket*)arg;
@@ -147,6 +145,7 @@ sock_send_sig(int socket_fd, struct Packet *pak)
 }
 
 // TODO: can be void func
+// TODO: add nickname to buffer
 unsigned char*
 sock_serialize_packet(struct Packet *pak)
 {
@@ -162,6 +161,7 @@ sock_serialize_packet(struct Packet *pak)
 	return pak->buffer;
 }
 
+// TODO: add reading of nickname inside raw buffer
 void
 sock_read_packet(char *raw_buffer, struct Packet *pak)
 {
@@ -177,5 +177,4 @@ sock_read_packet(char *raw_buffer, struct Packet *pak)
 	for (int i = 0; i < 205; i++) {
 		pak->message[i] = raw_buffer[4 + i];
 	}
-
 }
