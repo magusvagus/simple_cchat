@@ -328,16 +328,20 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				message[i] = '\n';
 
 				// TODO put into function/ struct with other commands
-				if (!strcmp(message, "/quit\n")) {
-					close(socket_fd);
+				// if (!strcmp(message, "/quit\n")) {
+				// 	close(socket_fd);
+				// 	break;
+				// }
+				// // if message is just enter, do nothing
+				// else if ( message[0] == '\n') {
+				// 	continue;
+				// }
+				int quit = win_command(socket_fd, message);
+				if (quit == -1) {
 					break;
 				}
-				// if message is just enter, do nothing
-				else if ( message[0] == '\n') {
-					continue;
-				}
 
-				// Serialize and send packet
+				
 				pak.type_test = SIG_MSG;
 				strcpy(pak.message, message);
 				sock_serialize_packet(&pak);
@@ -404,4 +408,18 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 		}
 		usleep(100000);
 	}
+}
+
+int
+win_command(int socket_fd, char *message)
+{
+	if (!strcmp(message, "/quit\n")) {
+		close(socket_fd);
+		return -1;
+	}
+	else if ( message[0] == '\n') {
+		return 0;
+	}
+
+	return 0;
 }

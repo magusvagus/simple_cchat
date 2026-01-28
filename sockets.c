@@ -117,6 +117,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		printf("%02d:%02d:%02d %s: %s",
 				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, pak.message);
 
+		// TODO: re-serialize packet?
 		send(acceptedSocket->fileDiscriptor, pak.message, sizeof(pak.message), 0);
 
 		// reset buffer

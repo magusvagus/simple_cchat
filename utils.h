@@ -25,5 +25,6 @@ void win_login_ui_init(struct Win_ui *ui);
 void win_free(struct Win_ui *ui);
 void win_login_input(struct Win_ui *ui, int socket_fd);
 void win_ui_input(struct Win_ui *ui, int socket_fd);
+int win_command(int socket_fd,char *message);
 
 #endif 
