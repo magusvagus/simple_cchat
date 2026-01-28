@@ -105,7 +105,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		ts = timestamp();
 
 		if (client_quit == 0) {
-			printf("%02d:%02d:%02d %s closed the connection.\n",
+			printf("%02d:%02d:%02d %s -> closed the connection.\n",
 					ts->tm_hour,ts->tm_min,ts->tm_sec, nickname);
 			break;
 		}

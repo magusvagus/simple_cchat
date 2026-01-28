@@ -294,7 +294,7 @@ win_login_input(struct Win_ui *ui, int socket_fd)
 }
 
 
-// entering this loop, increases drastically memory and cpu use
+// TODO: entering this loop, increases drastically memory and cpu use
 // must be fixed.
 void
 win_ui_input(struct Win_ui *ui, int socket_fd)
@@ -338,6 +338,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				sock_serialize_packet(&pak);
 				sock_send_sig(socket_fd, &pak);
 
+				// reset message buffer to zero
 				i = 0;
 				memset(message, 0, sizeof(message));
 				wmove(ui->send_win->sub, 0,1);
@@ -370,8 +371,11 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 		char r_msg[256];
 		int client_quit = recv(socket_fd, r_msg, sizeof(r_msg), 0);
 		if (client_quit > 0 && r_msg[0] != '\0') {
-			// TODO: add timestamp and nick of sender
-			wprintw(ui->recv_win->sub, "Recieved: %s",r_msg);
+			// get timestamp
+			struct tm *ts = NULL;
+			ts = timestamp();
+
+			wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec,r_msg);
 			touchwin(ui->recv_win->main);
 			win_reset(ui);
 			r_msg[0] = '\0';
