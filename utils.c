@@ -327,30 +327,16 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 			if (ch == '\n' || ch == '\r') {
 				message[i] = '\n';
 
-				// TODO put into function/ struct with other commands
-				// if (!strcmp(message, "/quit\n")) {
-				// 	close(socket_fd);
-				// 	break;
-				// }
-				// // if message is just enter, do nothing
-				// else if ( message[0] == '\n') {
-				// 	continue;
-				// }
 				int quit = win_command(socket_fd, message);
 				if (quit == -1) {
 					break;
 				}
-
 				
+				// serialize and send packet
 				pak.type_test = SIG_MSG;
 				strcpy(pak.message, message);
 				sock_serialize_packet(&pak);
 				sock_send_sig(socket_fd, &pak);
-				
-				// int ERR_send = send(socket_fd, message, strlen(message), 0);
-				// if(ERR_send == -1) {
-				// 	win_errpopup(NULL, NULL,"Error, could not send message.\n");
-				// }
 
 				i = 0;
 				memset(message, 0, sizeof(message));
