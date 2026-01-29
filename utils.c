@@ -329,12 +329,13 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 			if (ch == '\n' || ch == '\r') {
 				message[i] = '\n';
 
+				// check for quit command
 				int quit = win_command(socket_fd, message);
 				if (quit == -1) {
 					break;
 				}
 				
-				// serialize and send packet
+				// serialize and send packet to serv
 				pak.type_test = SIG_MSG;
 				strcpy(pak.message, message);
 				sock_serialize_packet(&pak);

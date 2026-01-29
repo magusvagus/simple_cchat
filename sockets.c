@@ -80,7 +80,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 	// remove \n 
 	nickname[strlen(nickname) -1] = '\0';
 
-	// fill struct with nickname
+	// fill user struct with nickname
 	strcpy(acceptedSocket->nickname, nickname);
  
 	// time of entering chat
@@ -88,11 +88,12 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 	time(&login_timestamp);
 	struct tm *ts = localtime(&login_timestamp);
 
-	printf("%02d:%02d:%02d %s entered chat\n",
+	printf("%02d:%02d:%02d %s entered chat.\n",
 			ts->tm_hour,ts->tm_min,ts->tm_sec, nickname);
 
-	// print recieve loop
+	// send/ recieve loop
 	while(1) {
+		// recieve message from client
 		int client_quit = 
 			recv(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
 			sock_read_packet(buffer, &pak);
@@ -104,19 +105,23 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		// update timestamp
 		ts = timestamp();
 
+		// check for client to quit
 		if (client_quit == 0) {
 			printf("%02d:%02d:%02d %s -> closed the connection.\n",
 					ts->tm_hour,ts->tm_min,ts->tm_sec, nickname);
 			break;
 		}
 
+		// TODO: might not be needed
 		// update timestamp
 		ts = timestamp();
 
+		// show message
 		printf("%02d:%02d:%02d %s: %s",
 				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, pak.message);
 
 		// TODO: re-serialize packet?
+		// send/ echo back to client
 		send(acceptedSocket->fileDiscriptor, pak.message, sizeof(pak.message), 0);
 
 		// reset buffer
