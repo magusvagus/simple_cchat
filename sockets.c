@@ -55,8 +55,6 @@ sock_accept_client(int serv_file_discriptor)
 	s->fileDiscriptor = client_file_discriptor;
 	s->address = client_address;
 	s->addressSize = client_address_size;
-	// TODO check if raw time is in ts struct
-	//s->timestamp_raw = login_timestamp;
 	s->client_id = client_id++;
 
 	snprintf(s->timestamp_formatted, sizeof(s->timestamp_formatted), 
