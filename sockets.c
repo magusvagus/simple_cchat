@@ -100,17 +100,16 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 			buffer[client_quit] = '\0';
 		}
 
-		// update timestamp
-		ts = timestamp();
-
 		// check for client to quit
 		if (client_quit == 0) {
+			// update timestamp
+			ts = timestamp();
+
 			printf("%02d:%02d:%02d %s -> closed the connection.\n",
 					ts->tm_hour,ts->tm_min,ts->tm_sec, nickname);
 			break;
 		}
 
-		// TODO: might not be needed
 		// update timestamp
 		ts = timestamp();
 
