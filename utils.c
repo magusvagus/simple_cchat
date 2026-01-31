@@ -336,11 +336,17 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				}
 				
 				// serialize and send packet to serv
-				pak.type_test = SIG_MSG;
-				strcpy(pak.message, message);
-				sock_serialize_packet(&pak);
-				sock_send_sig(socket_fd, &pak);
+				// pak.type_test = SIG_MSG;
+				// strcpy(pak.message, message);
+				// sock_serialize_packet(&pak);
+				// sock_send_sig(socket_fd, &pak);
 
+				int ERR_send = send(socket_fd, message, strlen(message), 0);
+				if(ERR_send == -1) {
+					win_errpopup(NULL, NULL,"Error, could not send message.\n");
+				}
+
+				// TODO: reset also packet
 				// reset message buffer to zero
 				i = 0;
 				memset(message, 0, sizeof(message));
@@ -371,7 +377,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 			}
 		}
 
-		char r_msg[256];
+		char r_msg[210];
 		// has no nickname information, must get packet instead of char buffer
 		// TODO: must be serialized and nickname must be printed
 		int client_quit = recv(socket_fd, r_msg, sizeof(r_msg), 0);

@@ -94,7 +94,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		// recieve message from client
 		int client_quit = 
 			recv(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
-			sock_read_packet(buffer, &pak);
+			//sock_read_packet(buffer, &pak);
 
 		if ( client_quit > 0) {
 			buffer[client_quit] = '\0';
@@ -102,7 +102,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 
 		// check for client to quit
 		if (client_quit == 0) {
-			// update timestamp
+			// get timestamp
 			ts = timestamp();
 
 			printf("%02d:%02d:%02d %s -> closed the connection.\n",
@@ -115,11 +115,11 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 
 		// show message
 		printf("%02d:%02d:%02d %s: %s",
-				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, pak.message);
+				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, buffer);
 
 		// TODO: re-serialize packet?
 		// send/ echo back to client
-		send(acceptedSocket->fileDiscriptor, pak.message, sizeof(pak.message), 0);
+		send(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
 
 		// reset buffer
 		buffer[0] = '\0';
