@@ -326,6 +326,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 		ch = wgetch(ui->send_win->sub);
 
 		if (ch != ERR) {
+			// when enter/ return is pushed
 			if (ch == '\n' || ch == '\r') {
 				message[i] = '\n';
 
@@ -336,19 +337,14 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				}
 				
 				// serialize and send packet to serv
-				// pak.type_test = SIG_MSG;
-				// strcpy(pak.message, message);
-				// sock_serialize_packet(&pak);
-				// sock_send_sig(socket_fd, &pak);
+				pak.type_test = SIG_MSG;
+				strcpy(pak.message, message);
+				sock_serialize_packet(&pak);
+				sock_send_sig(socket_fd, &pak);
 
-				int ERR_send = send(socket_fd, message, strlen(message), 0);
-				if(ERR_send == -1) {
-					win_errpopup(NULL, NULL,"Error, could not send message.\n");
-				}
-
-				// TODO: reset also packet
-				// reset message buffer to zero
+				// reset message buffer, Packet to zero
 				i = 0;
+				memset(&pak, 0, sizeof(pak));
 				memset(message, 0, sizeof(message));
 				wmove(ui->send_win->sub, 0,1);
 				wclrtoeol(ui->send_win->sub); // clear line to end
@@ -377,15 +373,20 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 			}
 		}
 
-		char r_msg[210];
+		char r_msg[410];
 		// has no nickname information, must get packet instead of char buffer
 		// TODO: must be serialized and nickname must be printed
 		int client_quit = recv(socket_fd, r_msg, sizeof(r_msg), 0);
+		//memset(&pak, 0, sizeof(pak));   
+		//sock_read_packet(r_msg, &pak);
+
 		if (client_quit > 0 && r_msg[0] != '\0') {
 			// get timestamp
 			struct tm *ts = NULL;
 			ts = timestamp();
 
+			// testing print
+			//wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec,pak.message);
 			// print recieved message to screen
 			wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec,r_msg);
 			touchwin(ui->recv_win->main);

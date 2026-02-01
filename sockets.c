@@ -67,7 +67,7 @@ sock_accept_client(int serv_file_discriptor)
 void 
 sock_listen_print(struct AcceptedSocket *acceptedSocket)
 {
-	char buffer[1024];
+	char buffer[210];
 	char nickname[17];
 	struct Packet pak = {0};
 
@@ -94,7 +94,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 		// recieve message from client
 		int client_quit = 
 			recv(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
-			//sock_read_packet(buffer, &pak);
+			sock_read_packet(buffer, &pak);
 
 		if ( client_quit > 0) {
 			buffer[client_quit] = '\0';
@@ -115,14 +115,19 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 
 		// show message
 		printf("%02d:%02d:%02d %s: %s",
-				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, buffer);
+				ts->tm_hour,ts->tm_min,ts->tm_sec, nickname, pak.message);
 
 		// TODO: re-serialize packet?
 		// send/ echo back to client
-		send(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
+		//pak.type_test = SIG_MSG;
+		//strcpy(pak.message, message);
+		//sock_serialize_packet(&pak);
+		//sock_send_sig(acceptedSocket->fileDiscriptor, &pak);
+		send(acceptedSocket->fileDiscriptor, pak.message, sizeof(pak.message), 0);
 
 		// reset buffer
 		buffer[0] = '\0';
+		pak.message[0] = '\0';
 	}   
 	close(acceptedSocket->fileDiscriptor);
 }
@@ -179,4 +184,6 @@ sock_read_packet(char *raw_buffer, struct Packet *pak)
 	for (int i = 0; i < 205; i++) {
 		pak->message[i] = raw_buffer[4 + i];
 	}
+
+	*pak->buffer = raw_buffer[0];
 }
