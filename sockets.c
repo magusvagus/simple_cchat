@@ -151,11 +151,11 @@ sock_send_sig(int socket_fd, struct Packet *pak)
 	return 0;
 }
 
-// TODO: can be void func
 // TODO: add nickname to buffer
-unsigned char*
+void
 sock_serialize_packet(struct Packet *pak)
 {
+	char *ptr = pak->buffer;
 	pak->buffer[0] = (pak->type_test >> 24) & 0xFF;
 	pak->buffer[1] = (pak->type_test >> 16) & 0xFF;
 	pak->buffer[2] = (pak->type_test >> 8) & 0xFF;
@@ -164,8 +164,6 @@ sock_serialize_packet(struct Packet *pak)
 	for (int i = 0; i < 205; i++) {
 		pak->buffer[4 + i] = pak->message[i];
 	}
-
-	return pak->buffer;
 }
 
 // TODO: add reading of nickname inside raw buffer

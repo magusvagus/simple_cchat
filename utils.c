@@ -386,7 +386,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 			ts = timestamp();
 
 			// testing print
-			//wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec,pak.message);
+			wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec,pak.message);
 
 			// print recieved message to screen
 			wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec,r_msg);
