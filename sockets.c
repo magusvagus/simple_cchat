@@ -184,6 +184,4 @@ sock_read_packet(char *raw_buffer, struct Packet *pak)
 	for (int i = 0; i < 205; i++) {
 		pak->message[i] = raw_buffer[4 + i];
 	}
-
-	*pak->buffer = raw_buffer[0];
 }
