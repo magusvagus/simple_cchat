@@ -52,7 +52,7 @@ struct AcceptedSocket* sock_accept_client(int SERV_FileDisctiptor);
 void sock_listen_print(struct AcceptedSocket *acceptedSocket);
 void* wrapper_listen_print(void* arg);
 int sock_send_sig(int socket_fd, struct Packet *pak);
-unsigned char* sock_serialize_packet(struct Packet *pak);
+void sock_serialize_packet(struct Packet *pak);
 void sock_read_packet(char *raw_buffer, struct Packet *pak);
 
 #endif
