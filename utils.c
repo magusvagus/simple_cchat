@@ -305,6 +305,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 	int i = 0;
 	char message[1024] = "";
 	static int test = 0;
+
 	struct Packet pak = {0};
 
 	while (1) {
@@ -377,8 +378,6 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 		// has no nickname information, must get packet instead of char buffer
 		// TODO: must be serialized and nickname must be printed
 		int client_quit = recv(socket_fd, r_msg, sizeof(r_msg), 0);
-		//memset(&pak, 0, sizeof(pak));   
-		//sock_read_packet(r_msg, &pak);
 
 		if (client_quit > 0 && r_msg[0] != '\0') {
 			// get timestamp
@@ -386,7 +385,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 			ts = timestamp();
 
 			// testing print
-			wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec,pak.message);
+			//wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec, pak.message);
 
 			// print recieved message to screen
 			wprintw(ui->recv_win->sub, "%02d:%02d:%02d %s",ts->tm_hour,ts->tm_min,ts->tm_sec,r_msg);

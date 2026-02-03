@@ -119,10 +119,6 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 
 		// TODO: re-serialize packet?
 		// send/ echo back to client
-		//pak.type_test = SIG_MSG;
-		//strcpy(pak.message, message);
-		//sock_serialize_packet(&pak);
-		//sock_send_sig(acceptedSocket->fileDiscriptor, &pak);
 		send(acceptedSocket->fileDiscriptor, pak.message, sizeof(pak.message), 0);
 
 		// reset buffer
@@ -155,7 +151,6 @@ sock_send_sig(int socket_fd, struct Packet *pak)
 void
 sock_serialize_packet(struct Packet *pak)
 {
-	char *ptr = pak->buffer;
 	pak->buffer[0] = (pak->type_test >> 24) & 0xFF;
 	pak->buffer[1] = (pak->type_test >> 16) & 0xFF;
 	pak->buffer[2] = (pak->type_test >> 8) & 0xFF;

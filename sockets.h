@@ -41,10 +41,10 @@ struct AcceptedSocket {
 // must be defined.
 struct Packet {
 	int32_t type_test;
-	uint8_t type;
-	unsigned char buffer[210];
+	//uint8_t type;
 	char message[205];
-	char nickname[20];
+	unsigned char buffer[210];
+	//char nickname[20];
 };
 
 struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port);
