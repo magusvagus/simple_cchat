@@ -51,7 +51,7 @@ struct sockaddr_in* sock_create_IPV4_addr( char* ip, int port);
 struct AcceptedSocket* sock_accept_client(int SERV_FileDisctiptor);
 void sock_listen_print(struct AcceptedSocket *acceptedSocket);
 void* wrapper_listen_print(void* arg);
-int sock_send_sig(int socket_fd, struct Packet *pak);
+int sock_send_packet(int socket_fd, struct Packet *pak);
 void sock_serialize_packet(struct Packet *pak);
 void sock_read_packet(char *raw_buffer, struct Packet *pak);
 
