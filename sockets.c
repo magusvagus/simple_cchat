@@ -137,7 +137,7 @@ wrapper_listen_print(void* arg)
 }
 
 int
-sock_send_sig(int socket_fd, struct Packet *pak)
+sock_send_packet(int socket_fd, struct Packet *pak)
 {
 	int err_send = send(socket_fd, pak->buffer, sizeof(pak->buffer), 0);
 	if(err_send == -1) {
