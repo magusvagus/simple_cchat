@@ -16,26 +16,25 @@ int main(void)
 {
 	/* --- sockets --- */
 
-	int SOCK_FileDiscriptor = socket(AF_INET,SOCK_STREAM,0);
-	if (SOCK_FileDiscriptor == -1){
+	int sock_fd = socket(AF_INET,SOCK_STREAM,0);
+	if (sock_fd == -1){
 		win_errpopup(NULL, NULL,"Error creating file discriptor.\n");
 	}
 
 	struct sockaddr_in *address = sock_create_IPV4_addr("127.0.0.1", 2000);
 
-	int err = connect(SOCK_FileDiscriptor, (struct sockaddr *)address, sizeof(*address));
+	int err = connect(sock_fd, (struct sockaddr *)address, sizeof(*address));
 	if(err == -1){
 		win_errpopup(NULL, NULL,"Error connecting to file discriptor\n");
 	}else{
 		printf("Connected\n");
 	}
 
-	fd_set fd_bitmap;
-	int sock_fd = SOCK_FileDiscriptor;
 
 	// Set socket to non-blocking
-	int flags = fcntl(SOCK_FileDiscriptor, F_GETFL, 0);
-	fcntl(SOCK_FileDiscriptor, F_SETFL, flags | O_NONBLOCK);
+	fd_set fd_bitmap;
+	int flags = fcntl(sock_fd, F_GETFL, 0);
+	fcntl(sock_fd, F_SETFL, flags | O_NONBLOCK);
 
 
 
@@ -54,7 +53,7 @@ int main(void)
 	wrefresh(ui.login_win->main);
 
 	// write to login widow
-	win_login_input(&ui, SOCK_FileDiscriptor);
+	win_login_input(&ui, sock_fd);
 
 	// remove \n 
 	ui.nickname[strlen(ui.nickname) -1] = '\0';
@@ -86,7 +85,7 @@ int main(void)
 
 	/* --- main input loop --- */
 
-	win_ui_input(&ui, SOCK_FileDiscriptor);
+	win_ui_input(&ui, sock_fd);
 
 
 
@@ -97,7 +96,7 @@ int main(void)
 	// deallocate heap mem
 	win_free(&ui);
 
-	close(SOCK_FileDiscriptor);
+	close(sock_fd);
 	return 0;
 
 }
