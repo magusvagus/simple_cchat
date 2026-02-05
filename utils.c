@@ -1,8 +1,7 @@
 #include "utils.h"
 #include "sockets.h"
 #include <time.h>
-#include <ncurses.h>
-#include <string.h>
+#include <ncurses.h> #include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -341,7 +340,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				pak.type_test = SIG_MSG;
 				strcpy(pak.message, message);
 				sock_serialize_packet(&pak);
-				sock_send_sig(socket_fd, &pak);
+				sock_send_packet(socket_fd, &pak);
 
 				// reset message buffer, Packet to zero
 				i = 0;
