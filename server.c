@@ -13,29 +13,29 @@ int main(void)
 	int port = 2000;
 
 	// create socket FD
-	int serv_file_discriptor = socket(AF_INET, SOCK_STREAM, 0);
-	if(serv_file_discriptor == -1) {
+	int serv_sock_fd = socket(AF_INET, SOCK_STREAM, 0);
+	if(serv_sock_fd == -1) {
 		printf("Error creating file discriptor.\n");
 	}
 
 	//called memory must be freed
 	struct sockaddr_in *serv_address = sock_create_IPV4_addr(NULL, port);
 
-	int err_bind = bind(serv_file_discriptor, (struct sockaddr *)serv_address, sizeof(*serv_address));
+	int err_bind = bind(serv_sock_fd, (struct sockaddr *)serv_address, sizeof(*serv_address));
 	if(err_bind == -1) {
 		printf("Error binding socket to port: %d.\n",port);
 	}
 
-	int err_listen = listen(serv_file_discriptor, backlog);
+	int err_listen = listen(serv_sock_fd, backlog);
 	if(err_listen == -1) {
 		printf("Error listening on port: %d.\n" ,port);
 	}
 
 	// TODO: split could be a better option for server comms
 	// main loop thread
-	//wrapper_main_loop(&serv_file_discriptor);
+	//wrapper_main_loop(&serv_sock_fd);
 	fd_set read_fds;
-	int sockfd = serv_file_discriptor;
+	int sockfd = serv_sock_fd;
 	
 	struct AcceptedSocket *sock_client_list = NULL;
 
@@ -46,7 +46,7 @@ int main(void)
 		// creates a new client struct and point it 
 		// to the user_list struct member
 		struct AcceptedSocket *new_client = 
-			sock_accept_client(serv_file_discriptor);
+			sock_accept_client(serv_sock_fd);
 
 		new_client->user_list = sock_client_list;
 		sock_client_list = new_client;
@@ -58,8 +58,7 @@ int main(void)
 	// TODO: add socket list manipulation/ options here
 
 	// close all sockets
-	//close(acceptedSocket->fileDiscriptor);
-	shutdown(serv_file_discriptor, SHUT_RDWR);
+	shutdown(serv_sock_fd, SHUT_RDWR);
 
 	free(serv_address);
 	serv_address = NULL;
