@@ -19,7 +19,7 @@
 // #define SIG_MSG_USER
 
 struct AcceptedSocket {
-	int fileDiscriptor;
+	int fd;
 	int addressSize;
 	struct sockaddr_in address;
 

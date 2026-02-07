@@ -52,7 +52,7 @@ sock_accept_client(int serv_file_discriptor)
 
 	struct AcceptedSocket *s = calloc(1, sizeof(struct AcceptedSocket));
 
-	s->fileDiscriptor = client_file_discriptor;
+	s->fd = client_file_discriptor;
 	s->address = client_address;
 	s->addressSize = client_address_size;
 	s->client_id = client_id++;
@@ -73,7 +73,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 
 	// ask for nickname
 	int client_quit = 
-		recv(acceptedSocket->fileDiscriptor, nickname, sizeof(nickname), 0);
+		recv(acceptedSocket->fd, nickname, sizeof(nickname), 0);
 
 	// remove \n 
 	nickname[strlen(nickname) -1] = '\0';
@@ -93,7 +93,7 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 	while(1) {
 		// recieve message from client
 		int client_quit = 
-			recv(acceptedSocket->fileDiscriptor, buffer, sizeof(buffer), 0);
+			recv(acceptedSocket->fd, buffer, sizeof(buffer), 0);
 			sock_read_packet(buffer, &pak);
 
 		if ( client_quit > 0) {
@@ -119,13 +119,13 @@ sock_listen_print(struct AcceptedSocket *acceptedSocket)
 
 		// TODO: re-serialize packet?
 		// send/ echo back to client
-		send(acceptedSocket->fileDiscriptor, pak.message, sizeof(pak.message), 0);
+		send(acceptedSocket->fd, pak.message, sizeof(pak.message), 0);
 
 		// reset buffer
 		buffer[0] = '\0';
 		pak.message[0] = '\0';
 	}   
-	close(acceptedSocket->fileDiscriptor);
+	close(acceptedSocket->fd);
 }
 
 void*
