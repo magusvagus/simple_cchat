@@ -33,7 +33,6 @@ int main(void)
 
 	// TODO: split could be a better option for server comms
 	// main loop thread
-	//wrapper_main_loop(&serv_sock_fd);
 	fd_set read_fds;
 	int sockfd = serv_sock_fd;
 	
