@@ -180,7 +180,7 @@ sock_read_packet(char *raw_buffer, struct Packet *pak)
 	}
 }
 
-int
+void
 sock_packet_encrypt(struct Packet *pak) 
 {
 	// keys have to be removed
@@ -189,20 +189,17 @@ sock_packet_encrypt(struct Packet *pak)
     unsigned char *iv = (unsigned char *)"0123456789012345";                   // 16 bytes
 
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
-	unsigned char ciphertext[210];
+	unsigned char ciphertext[238];
 
     int len;
-	int plaintext_len = sizeof(pak->buffer);
-	int ciphertext_len = sizeof(ciphertext);
+	int plaintext_len;
 
     EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
     EVP_EncryptUpdate(ctx, ciphertext, &len, pak->buffer, plaintext_len);
-    ciphertext_len = len;
+    plaintext_len = len;
     EVP_EncryptFinal_ex(ctx, ciphertext + len, &len);
-    ciphertext_len += len;
+    plaintext_len += len;
     EVP_CIPHER_CTX_free(ctx);
-
-    return ciphertext_len;
 }   
 
 
