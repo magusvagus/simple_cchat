@@ -1,5 +1,6 @@
 #include "sockets.h"
 #include "utils.h"
+#include <openssl/evp.h>
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
@@ -178,3 +179,30 @@ sock_read_packet(char *raw_buffer, struct Packet *pak)
 		pak->message[i] = raw_buffer[4 + i];
 	}
 }
+
+int
+sock_packet_encrypt(struct Packet *pak) 
+{
+	// keys have to be removed
+	// for testing purposes only
+    unsigned char *key = (unsigned char *)"01234567890123456789012345678901"; // 32 bytes
+    unsigned char *iv = (unsigned char *)"0123456789012345";                   // 16 bytes
+
+    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+	unsigned char ciphertext[210];
+
+    int len;
+	int plaintext_len = sizeof(pak->buffer);
+	int ciphertext_len = sizeof(ciphertext);
+
+    EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+    EVP_EncryptUpdate(ctx, ciphertext, &len, pak->buffer, plaintext_len);
+    ciphertext_len = len;
+    EVP_EncryptFinal_ex(ctx, ciphertext + len, &len);
+    ciphertext_len += len;
+    EVP_CIPHER_CTX_free(ctx);
+
+    return ciphertext_len;
+}   
+
+
