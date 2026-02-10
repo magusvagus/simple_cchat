@@ -54,7 +54,7 @@ void* wrapper_listen_print(void* arg);
 int sock_send_packet(int socket_fd, struct Packet *pak);
 void sock_serialize_packet(struct Packet *pak);
 void sock_read_packet(char *raw_buffer, struct Packet *pak);
-void sock_packet_encrypt(struct Packet *pak);
+void sock_encrypt_packet(struct Packet *pak);
 
 #endif
 

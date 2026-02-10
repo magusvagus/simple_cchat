@@ -181,7 +181,7 @@ sock_read_packet(char *raw_buffer, struct Packet *pak)
 }
 
 void
-sock_packet_encrypt(struct Packet *pak) 
+sock_encrypt_packet(struct Packet *pak) 
 {
 	// keys have to be removed
 	// for testing purposes only
