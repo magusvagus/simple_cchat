@@ -42,7 +42,7 @@ struct AcceptedSocket {
 struct Packet {
 	int32_t type_test;
 	//uint8_t type;
-	char message[205];
+	unsigned char message[205];
 	unsigned char buffer[210];
 	//char nickname[20];
 };
