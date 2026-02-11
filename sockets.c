@@ -202,4 +202,29 @@ sock_encrypt_packet(struct Packet *pak)
     EVP_CIPHER_CTX_free(ctx);
 }   
 
+int
+sock_decrypt_packet(struct Packet *pak) 
+{
+	// keys have to be removed
+	// for testing purposes only
+    unsigned char *key = (unsigned char *)"01234567890123456789012345678901"; // 32 bytes
+    unsigned char *iv = (unsigned char *)"0123456789012345";                   // 16 bytes
+
+    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+	unsigned char plaintext[238];
+
+    int len; 
+	int plaintext_len;
+	int ciphertext_len = strlen((char *)pak->buffer);
+
+    EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+    EVP_DecryptUpdate(ctx, plaintext, &len, pak->buffer, ciphertext_len);
+    plaintext_len = len;
+    EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
+    plaintext_len += len;
+    EVP_CIPHER_CTX_free(ctx);
+
+    return plaintext_len;
+}   
+
 
