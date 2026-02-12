@@ -227,4 +227,66 @@ sock_decrypt_packet(struct Packet *pak)
     return plaintext_len;
 }   
 
+// Encrypt plaintext in pak->message, store ciphertext in pak->message
+int
+encrypt(struct Packet *pak, unsigned char *key, unsigned char *iv) 
+{
+	// keys have to be removed
+	// for testing purposes only
+    unsigned char *key = (unsigned char *)"01234567890123456789012345678901"; // 32 bytes
+    unsigned char *iv = (unsigned char *)"0123456789012345";                   // 16 bytes
+
+    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+    if (!ctx) return -1;
+
+    int len, ciphertext_len = 0;
+
+    // Get plaintext length (null-terminated string)
+    size_t plaintext_len = strlen((char *)pak->message);
+
+    // Buffer for ciphertext (must be large enough)
+    unsigned char ciphertext[256];
+
+    // Initialize encryption
+    EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+    EVP_EncryptUpdate(ctx, ciphertext, &len, pak->message, (int)plaintext_len);
+    ciphertext_len = len;
+    EVP_EncryptFinal_ex(ctx, ciphertext + len, &len);
+    ciphertext_len += len;
+
+    memcpy(pak->message, ciphertext, ciphertext_len);
+
+    EVP_CIPHER_CTX_free(ctx);
+
+	return ciphertext_len;
+}
+
+// Decrypt ciphertext in pak->message, store plaintext in pak->message
+int
+decrypt(struct Packet *pak, int ciphertext_len) 
+{
+	// keys have to be removed
+	// for testing purposes only
+    unsigned char *key = (unsigned char *)"01234567890123456789012345678901"; // 32 bytes
+    unsigned char *iv = (unsigned char *)"0123456789012345";                   // 16 bytes
+
+    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+    if (!ctx) return -1;
+
+    int len, plaintext_len = 0;
+    unsigned char plaintext[256];
+
+    EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+    EVP_DecryptUpdate(ctx, plaintext, &len, pak->message, ciphertext_len);
+    plaintext_len = len;
+    EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
+    plaintext_len += len;
+
+    // Null-terminate plaintext before using as string
+    plaintext[plaintext_len] = '\0';
+    memcpy(pak->message, plaintext, plaintext_len + 1); // +1 for null
+
+    EVP_CIPHER_CTX_free(ctx);
+    return plaintext_len;
+}
 
