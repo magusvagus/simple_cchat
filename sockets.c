@@ -215,7 +215,7 @@ sock_encrypt_packet(struct Packet *pak)
 }
 
 // Decrypt ciphertext in pak->message, store plaintext in pak->message
-int
+void
 sock_decrypt_packet(struct Packet *pak, int ciphertext_len) 
 {
 	// keys have to be removed
@@ -226,7 +226,8 @@ sock_decrypt_packet(struct Packet *pak, int ciphertext_len)
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
     if (!ctx) return -1;
 
-    int len, plaintext_len = 0;
+    int len;
+	int plaintext_len = 0;
     unsigned char plaintext[256];
 
     EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
@@ -240,6 +241,5 @@ sock_decrypt_packet(struct Packet *pak, int ciphertext_len)
     memcpy(pak->message, plaintext, plaintext_len + 1); // +1 for null
 
     EVP_CIPHER_CTX_free(ctx);
-    return plaintext_len;
 }
 
