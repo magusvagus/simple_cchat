@@ -195,26 +195,27 @@ sock_encrypt_packet(struct Packet *pak)
     int len, ciphertext_len = 0;
 
     // Get plaintext length (null-terminated string)
-    size_t plaintext_len = strlen((char *)pak->message);
+    size_t plaintext_len = strlen((char *)pak->buffer);
 
     // Buffer for ciphertext (must be large enough)
     unsigned char ciphertext[256];
 
     // Initialize encryption
     EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
-    EVP_EncryptUpdate(ctx, ciphertext, &len, pak->message, (int)plaintext_len);
+    EVP_EncryptUpdate(ctx, ciphertext, &len, pak->buffer, (int)plaintext_len);
     ciphertext_len = len;
     EVP_EncryptFinal_ex(ctx, ciphertext + len, &len);
     ciphertext_len += len;
 
-    memcpy(pak->message, ciphertext, ciphertext_len);
+    memcpy(pak->buffer, ciphertext, ciphertext_len);
 
     EVP_CIPHER_CTX_free(ctx);
 
 	return ciphertext_len;
 }
 
-// Decrypt ciphertext in pak->message, store plaintext in pak->message
+// Decrypt ciphertext in pak->message, 
+// store plaintext in pak->message
 void
 sock_decrypt_packet(struct Packet *pak, int ciphertext_len) 
 {
@@ -224,21 +225,21 @@ sock_decrypt_packet(struct Packet *pak, int ciphertext_len)
     unsigned char *iv = (unsigned char *)"0123456789012345";                   // 16 bytes
 
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
-    if (!ctx) return -1;
+    if (!ctx) /* do error cipher*/ ;
 
     int len;
 	int plaintext_len = 0;
     unsigned char plaintext[256];
 
     EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
-    EVP_DecryptUpdate(ctx, plaintext, &len, pak->message, ciphertext_len);
+    EVP_DecryptUpdate(ctx, plaintext, &len, pak->buffer, ciphertext_len);
     plaintext_len = len;
     EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
     plaintext_len += len;
 
     // Null-terminate plaintext before using as string
     plaintext[plaintext_len] = '\0';
-    memcpy(pak->message, plaintext, plaintext_len + 1); // +1 for null
+    memcpy(pak->buffer, plaintext, plaintext_len + 1); // +1 for null
 
     EVP_CIPHER_CTX_free(ctx);
 }
