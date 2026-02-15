@@ -1,4 +1,4 @@
-CFLAGS = -Wall -g -I. -pthread -lncurses
+CFLAGS = -Wall -g -I. -pthread -lncurses -lcrypto
 
 serv: server.o sockets.o utils.o
 	egcc $(CFLAGS) -o serv server.o sockets.o utils.o
