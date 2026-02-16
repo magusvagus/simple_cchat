@@ -44,6 +44,7 @@ struct Packet {
 	//uint8_t type;
 	unsigned char message[205];
 	unsigned char buffer[210];
+	int32_t cipher_len;
 	// TODO: might need buffer bit length for decryption
 	// or make sure the buffer len is always the same
 	//char nickname[20];
