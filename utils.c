@@ -346,6 +346,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				i = 0;
 				memset(&pak, 0, sizeof(pak));
 				memset(message, 0, sizeof(message));
+				mvwprintw(ui->send_win->main,0,20, "%d", i); // print current char count
 				wmove(ui->send_win->sub, 0,1);
 				wclrtoeol(ui->send_win->sub); // clear line to end
 				mvwprintw(ui->send_win->sub, 0, 0, "%s: %s", ui->nickname, message);
@@ -356,6 +357,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				// otherwise user can send deleted string as sequence of empty spaces
 				if (i > 0) {
 					i--;
+					mvwprintw(ui->send_win->main,0,20, "%d", i); // print current char count
 					message[i] = ' ';
 					mvwprintw(ui->send_win->sub, 0, 0, "%s: %s", ui->nickname, message);
 					message[i] = '\0';
@@ -370,6 +372,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				wrefresh(ui->send_win->sub);
 				wrefresh(ui->send_win->main);
 				i++;
+				mvwprintw(ui->send_win->main,0,20, "%d", i); // print curent char count
 			}
 		}
 
