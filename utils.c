@@ -312,6 +312,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 
 	getmaxyx(stdscr,max_row,max_col);
 
+	// TODO 120 characters should be maximum
 	while (1) {
 		// refresh boxes
 		touchwin(stdscr);
@@ -331,6 +332,8 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 		ch = wgetch(ui->send_win->sub);
 
 		if (ch != ERR) {
+			// TODO: if typed in text exceeds first line/row, the text remains
+			// in the window after sending. Maybe reset/ flush send_win
 			// when enter/ return is pushed
 			if (ch == '\n' || ch == '\r') {
 				message[i] = '\n';
