@@ -339,7 +339,7 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 				message[i] = '\n';
 
 				// check for quit command
-				int quit = win_command(socket_fd, message);
+				int quit = win_command(socket_fd, message, ui);
 				if (quit == -1) {
 					break;
 				}
@@ -425,11 +425,17 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 }
 
 int
-win_command(int socket_fd, char *message)
+win_command(int socket_fd, char *message, struct Win_ui *ui)
 {
 	if (!strcmp(message, "/quit\n")) {
 		close(socket_fd);
 		return -1;
+	}
+	if (!strcmp(message, "/up\n")) {
+		wscrl(ui->recv_win->sub, 4);
+	}
+	if (!strcmp(message, "/down\n")) {
+		wscrl(ui->recv_win->sub, -4);
 	}
 	else if ( message[0] == '\n') {
 		return 0;
