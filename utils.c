@@ -142,6 +142,53 @@ win_nested(char *title, int winy, int winx, int drawpty, int drawptx, int wfl)
 	return wn;
 }
 
+struct Win_nested*
+win_pad_nested(char *title, int winy, int winx, int drawpty, int drawptx, int wfl) 
+{
+	// disable echoing of keyboard shortcuts
+	noecho();
+
+	// rs - root screen
+	int rs_row;
+	int rs_col;
+
+	getmaxyx(stdscr,rs_row,rs_col);
+	
+	// calloc both windows/ or struct
+	WINDOW *main_win;
+	WINDOW *sub_pad;
+
+	//floating window option
+	if (wfl == 1) {
+		// set draw point of window
+		drawpty = rs_row/2-winy/2;
+		drawptx = rs_col/2-winx/2;
+	}
+
+	// create window w/ sub window
+	main_win  = newwin(winy, winx, drawpty, drawptx);
+	sub_pad = newpad(300, winx-2);
+
+	// enable scrolling
+	scrollok(sub_pad, TRUE);
+
+	struct Win_nested *wn;
+	wn = calloc(1, sizeof(struct Win_nested));
+
+	wn->main = main_win;
+	wn->sub = sub_pad;
+
+	box(main_win,0,0);
+
+	// print window title
+	if (title != NULL) {
+		mvwprintw(main_win,0,1, "%s", title);
+	}
+
+	return wn;
+}
+
+
 void
 win_reset(struct Win_ui *ui)
 {
@@ -153,6 +200,9 @@ win_reset(struct Win_ui *ui)
 	if(ui->recv_win->main != NULL) {
 		wrefresh(ui->recv_win->main);
 		wrefresh(ui->recv_win->sub);
+    	prefresh(ui->recv_win->sub, 2, 0, 1, 1, 19, 79);
+		int pad_row = 0; // Start at top of pad
+		prefresh(ui->recv_win->sub, pad_row, 1, 1, 1, LINES - 1, COLS - 1);
 	}
 
 	if(ui->login_win->main != NULL) {
@@ -176,7 +226,7 @@ win_main_ui_init(struct Win_ui *ui)
 		win_errpopup(NULL, NULL,"Error creating send window\n");
 	}
 
-	ui->recv_win = win_nested("Chatroom", rs_row-4, rs_col, 0, 0, 0);
+	ui->recv_win = win_pad_nested("Chatroom", rs_row-4, rs_col, 0, 0, 0);
 	if (ui->send_win == NULL) {
 		win_errpopup(NULL, NULL,"Error creating recieve window\n");
 	}
