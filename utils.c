@@ -1,6 +1,5 @@
 #include "utils.h"
-#include "sockets.h"
-#include <time.h>
+#include "sockets.h" #include <time.h>
 #include <ncurses.h> #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -166,17 +165,17 @@ win_pad_nested(char *title, int winy, int winx, int drawpty, int drawptx, int wf
 	}
 
 	// create window w/ sub window
-	main_win  = newwin(winy, winx, drawpty, drawptx);
+	main_win = newwin(winy, winx, drawpty, drawptx);
 	sub_pad = newpad(300, winx-2);
 
 	// enable scrolling
 	scrollok(sub_pad, TRUE);
 
-	struct Win_nested *wn;
-	wn = calloc(1, sizeof(struct Win_nested));
+	struct Win_nested *pn;
+	pn = calloc(1, sizeof(struct Win_nested));
 
-	wn->main = main_win;
-	wn->sub = sub_pad;
+	pn->main = main_win;
+	pn->sub = sub_pad;
 
 	box(main_win,0,0);
 
@@ -185,7 +184,7 @@ win_pad_nested(char *title, int winy, int winx, int drawpty, int drawptx, int wf
 		mvwprintw(main_win,0,1, "%s", title);
 	}
 
-	return wn;
+	return pn;
 }
 
 
@@ -200,9 +199,6 @@ win_reset(struct Win_ui *ui)
 	if(ui->recv_win->main != NULL) {
 		wrefresh(ui->recv_win->main);
 		wrefresh(ui->recv_win->sub);
-    	prefresh(ui->recv_win->sub, 2, 0, 1, 1, 19, 79);
-		int pad_row = 0; // Start at top of pad
-		prefresh(ui->recv_win->sub, pad_row, 1, 1, 1, LINES - 1, COLS - 1);
 	}
 
 	if(ui->login_win->main != NULL) {
@@ -226,7 +222,7 @@ win_main_ui_init(struct Win_ui *ui)
 		win_errpopup(NULL, NULL,"Error creating send window\n");
 	}
 
-	ui->recv_win = win_pad_nested("Chatroom", rs_row-4, rs_col, 0, 0, 0);
+	ui->recv_win = win_nested("Chatroom", rs_row-4, rs_col, 0, 0, 0);
 	if (ui->send_win == NULL) {
 		win_errpopup(NULL, NULL,"Error creating recieve window\n");
 	}
@@ -369,7 +365,8 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 		touchwin(ui->send_win->main);
 		touchwin(ui->recv_win->main);
 
-		// Redraw prompt and current input
+		// Redraw prompt and current input + title
+		mvwprintw(ui->send_win->main,0, (max_col-8), "%03d/120", i); // print curent char count
 		mvwprintw(ui->send_win->sub, 0, 0, "%s: %s", ui->nickname, message);
 		win_reset(ui);
 
