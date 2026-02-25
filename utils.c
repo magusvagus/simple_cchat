@@ -383,6 +383,13 @@ win_ui_input(struct Win_ui *ui, int socket_fd)
 			// in the window after sending. Maybe reset/ flush send_win
 			// when enter/ return is pushed
 			if (ch == '\n' || ch == '\r') {
+
+				// dont process if send string is empty
+				if (message[0] == '\n') {
+					continue;
+				}
+
+				// add newline to end, so it gets printed properly
 				message[i] = '\n';
 
 				// check for quit command
